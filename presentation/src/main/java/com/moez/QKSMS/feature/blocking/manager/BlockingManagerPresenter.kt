@@ -5,7 +5,6 @@ import com.moez.QKSMS.R
 import com.moez.QKSMS.blocking.*
 import com.moez.QKSMS.common.Navigator
 import com.moez.QKSMS.common.base.QkPresenter
-import com.moez.QKSMS.manager.AnalyticsManager
 import com.moez.QKSMS.repository.ConversationRepository
 import com.moez.QKSMS.util.Preferences
 import com.uber.autodispose.android.lifecycle.scope
@@ -17,7 +16,6 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class BlockingManagerPresenter @Inject constructor(
-    private val analytics: AnalyticsManager,
     private val callBlocker: CallBlockerBlockingClient,
     private val callControl: CallControlBlockingClient,
     private val context: Context,
@@ -65,7 +63,6 @@ class BlockingManagerPresenter @Inject constructor(
                 .switchMap { numbers -> qksms.block(numbers).andThen(Observable.just(Unit)) } // Hack
                 .autoDispose(view.scope())
                 .subscribe {
-                    analytics.setUserProperty("Blocking Manager", "QKSMS")
                     prefs.blockingManager.set(Preferences.BLOCKING_MANAGER_QKSMS)
                 }
 
@@ -73,7 +70,6 @@ class BlockingManagerPresenter @Inject constructor(
                 .filter {
                     val installed = callBlocker.isAvailable()
                     if (!installed) {
-                        analytics.track("Install Call Blocker")
                         navigator.installCallBlocker()
                     }
 
@@ -82,7 +78,6 @@ class BlockingManagerPresenter @Inject constructor(
                 }
                 .autoDispose(view.scope())
                 .subscribe {
-                    analytics.setUserProperty("Blocking Manager", "Call Blocker")
                     prefs.blockingManager.set(Preferences.BLOCKING_MANAGER_CB)
                 }
 
@@ -90,7 +85,6 @@ class BlockingManagerPresenter @Inject constructor(
                 .filter {
                     val installed = callControl.isAvailable()
                     if (!installed) {
-                        analytics.track("Install Call Control")
                         navigator.installCallControl()
                     }
 
@@ -115,7 +109,6 @@ class BlockingManagerPresenter @Inject constructor(
                 .autoDispose(view.scope())
                 .subscribe {
                     callControl.shouldBlock("callcontrol").blockingGet()
-                    analytics.setUserProperty("Blocking Manager", "Call Control")
                     prefs.blockingManager.set(Preferences.BLOCKING_MANAGER_CC)
                 }
 
@@ -123,7 +116,6 @@ class BlockingManagerPresenter @Inject constructor(
                 .filter {
                     val installed = shouldIAnswer.isAvailable()
                     if (!installed) {
-                        analytics.track("Install SIA")
                         navigator.installSia()
                     }
 
@@ -132,7 +124,6 @@ class BlockingManagerPresenter @Inject constructor(
                 }
                 .autoDispose(view.scope())
                 .subscribe {
-                    analytics.setUserProperty("Blocking Manager", "SIA")
                     prefs.blockingManager.set(Preferences.BLOCKING_MANAGER_SIA)
                 }
     }

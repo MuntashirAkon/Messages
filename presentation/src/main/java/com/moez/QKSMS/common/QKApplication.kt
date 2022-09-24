@@ -23,11 +23,9 @@ import androidx.core.provider.FontRequest
 import androidx.emoji.text.EmojiCompat
 import androidx.emoji.text.FontRequestEmojiCompatConfig
 import com.moez.QKSMS.R
-import com.moez.QKSMS.common.util.CrashlyticsTree
 import com.moez.QKSMS.common.util.FileLoggingTree
 import com.moez.QKSMS.injection.AppComponentManager
 import com.moez.QKSMS.injection.appComponent
-import com.moez.QKSMS.manager.BillingManager
 import com.moez.QKSMS.migration.QkMigration
 import com.moez.QKSMS.migration.QkRealmMigration
 import com.moez.QKSMS.util.NightModeManager
@@ -38,9 +36,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -52,7 +47,6 @@ class QKApplication : Application(), HasAndroidInjector {
     @Suppress("unused")
     @Inject lateinit var qkMigration: QkMigration
 
-    @Inject lateinit var billingManager: BillingManager
     @Inject lateinit var androidInjector : DispatchingAndroidInjector<Any>
     @Inject lateinit var fileLoggingTree: FileLoggingTree
     @Inject lateinit var nightModeManager: NightModeManager
@@ -73,11 +67,6 @@ class QKApplication : Application(), HasAndroidInjector {
 
         qkMigration.performMigration()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            billingManager.checkForPurchases()
-            billingManager.queryProducts()
-        }
-
         nightModeManager.updateCurrentTheme()
 
         val fontRequest = FontRequest(
@@ -88,7 +77,7 @@ class QKApplication : Application(), HasAndroidInjector {
 
         EmojiCompat.init(FontRequestEmojiCompatConfig(this, fontRequest))
 
-        Timber.plant(Timber.DebugTree(), CrashlyticsTree(), fileLoggingTree)
+        Timber.plant(Timber.DebugTree(), fileLoggingTree)
 
         RxDogTag.builder()
                 .configureWith(AutoDisposeConfigurer::configure)

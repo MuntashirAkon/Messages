@@ -77,7 +77,6 @@ class MainActivity : QkThemedActivity(), MainView {
     @Inject lateinit var disposables: CompositeDisposable
     @Inject lateinit var navigator: Navigator
     @Inject lateinit var conversationsAdapter: ConversationsAdapter
-    @Inject lateinit var drawerBadgesExperiment: DrawerBadgesExperiment
     @Inject lateinit var searchAdapter: SearchAdapter
     @Inject lateinit var itemTouchCallback: ConversationItemTouchCallback
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -101,12 +100,10 @@ class MainActivity : QkThemedActivity(), MainView {
                 scheduled.clicks().map { NavItem.SCHEDULED },
                 blocking.clicks().map { NavItem.BLOCKING },
                 settings.clicks().map { NavItem.SETTINGS },
-                plus.clicks().map { NavItem.PLUS },
                 help.clicks().map { NavItem.HELP },
                 invite.clicks().map { NavItem.INVITE }))
     }
     override val optionsItemIntent: Subject<Int> = PublishSubject.create()
-    override val plusBannerIntent by lazy { plusBanner.clicks() }
     override val conversationsSelectedIntent by lazy { conversationsAdapter.selectionChanges }
     override val confirmDeleteIntent: Subject<List<Long>> = PublishSubject.create()
     override val swipeConversationIntent by lazy { itemTouchCallback.swipes }
@@ -169,14 +166,8 @@ class MainActivity : QkThemedActivity(), MainView {
                                 archivedIcon.imageTintList = tintList
                             }
 
-                    // Miscellaneous views
-                    listOf(plusBadge1, plusBadge2).forEach { badge ->
-                        badge.setBackgroundTint(theme.theme)
-                        badge.setTextColor(theme.textPrimary)
-                    }
                     syncingProgress?.progressTintList = ColorStateList.valueOf(theme.theme)
                     syncingProgress?.indeterminateTintList = ColorStateList.valueOf(theme.theme)
-                    plusIcon.setTint(theme.theme)
                     compose.setBackgroundTint(theme.theme)
 
                     // Set the FAB compose icon color
@@ -236,12 +227,6 @@ class MainActivity : QkThemedActivity(), MainView {
         toolbar.menu.findItem(R.id.read)?.isVisible = markRead && selectedConversations != 0
         toolbar.menu.findItem(R.id.unread)?.isVisible = !markRead && selectedConversations != 0
         toolbar.menu.findItem(R.id.block)?.isVisible = selectedConversations != 0
-
-        listOf(plusBadge1, plusBadge2).forEach { badge ->
-            badge.isVisible = drawerBadgesExperiment.variant && !state.upgraded
-        }
-        plus.isVisible = state.upgraded
-        plusBanner.isVisible = !state.upgraded
 
         compose.setVisible(state.page is Inbox || state.page is Archived)
         conversationsAdapter.emptyView = empty.takeIf { state.page is Inbox || state.page is Archived }

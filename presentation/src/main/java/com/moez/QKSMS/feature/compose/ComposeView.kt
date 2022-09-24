@@ -19,7 +19,6 @@
 package com.moez.QKSMS.feature.compose
 
 import android.net.Uri
-import androidx.annotation.StringRes
 import androidx.core.view.inputmethod.InputContentInfoCompat
 import com.moez.QKSMS.common.base.QkView
 import com.moez.QKSMS.model.Attachment
@@ -53,7 +52,6 @@ interface ComposeView : QkView<ComposeState> {
     val scheduleCancelIntent: Observable<*>
     val changeSimIntent: Observable<*>
     val sendIntent: Observable<Unit>
-    val viewQksmsPlusIntent: Subject<Unit>
     val backPressedIntent: Observable<Unit>
 
     fun clearSelection()
@@ -70,6 +68,5 @@ interface ComposeView : QkView<ComposeState> {
     fun requestContact()
     fun setDraft(draft: String)
     fun scrollToMessage(id: Long)
-    fun showQksmsPlusSnackbar(@StringRes message: Int)
 
 }

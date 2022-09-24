@@ -21,7 +21,6 @@ package com.moez.QKSMS.feature.themepicker
 import android.animation.ObjectAnimator
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.clicks
 import com.moez.QKSMS.R
 import com.moez.QKSMS.common.base.QkController
@@ -32,8 +31,6 @@ import com.moez.QKSMS.common.util.extensions.setVisible
 import com.moez.QKSMS.feature.themepicker.injection.ThemePickerModule
 import com.moez.QKSMS.injection.appComponent
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.theme_picker_controller.*
 import kotlinx.android.synthetic.main.theme_picker_hsv.*
 import javax.inject.Inject
@@ -47,8 +44,6 @@ class ThemePickerController(
     @Inject lateinit var colors: Colors
     @Inject lateinit var themeAdapter: ThemeAdapter
     @Inject lateinit var themePagerAdapter: ThemePagerAdapter
-
-    private val viewQksmsPlusSubject: Subject<Unit> = PublishSubject.create()
 
     init {
         appComponent
@@ -90,14 +85,6 @@ class ThemePickerController(
         }
     }
 
-    override fun showQksmsPlusSnackbar() {
-        Snackbar.make(contentView, R.string.toast_qksms_plus, Snackbar.LENGTH_LONG).run {
-            setAction(R.string.button_more) { viewQksmsPlusSubject.onNext(Unit) }
-            setActionTextColor(colors.theme().theme)
-            show()
-        }
-    }
-
     override fun themeSelected(): Observable<Int> = themeAdapter.colorSelected
 
     override fun hsvThemeSelected(): Observable<Int> = picker.selectedColor
@@ -105,8 +92,6 @@ class ThemePickerController(
     override fun clearHsvThemeClicks(): Observable<*> = clear.clicks()
 
     override fun applyHsvThemeClicks(): Observable<*> = apply.clicks()
-
-    override fun viewQksmsPlusClicks(): Observable<*> = viewQksmsPlusSubject
 
     override fun render(state: ThemePickerState) {
         tabs.setRecipientId(state.recipientId)

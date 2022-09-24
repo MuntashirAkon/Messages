@@ -19,10 +19,8 @@
 package com.moez.QKSMS.feature.themepicker
 
 import com.f2prateek.rx.preferences2.Preference
-import com.moez.QKSMS.common.Navigator
 import com.moez.QKSMS.common.base.QkPresenter
 import com.moez.QKSMS.common.util.Colors
-import com.moez.QKSMS.manager.BillingManager
 import com.moez.QKSMS.manager.WidgetManager
 import com.moez.QKSMS.util.Preferences
 import com.uber.autodispose.android.lifecycle.scope
@@ -35,9 +33,7 @@ import javax.inject.Named
 class ThemePickerPresenter @Inject constructor(
     prefs: Preferences,
     @Named("recipientId") private val recipientId: Long,
-    private val billingManager: BillingManager,
     private val colors: Colors,
-    private val navigator: Navigator,
     private val widgetManager: WidgetManager
 ) : QkPresenter<ThemePickerView, ThemePickerState>(ThemePickerState(recipientId = recipientId)) {
 
@@ -75,24 +71,14 @@ class ThemePickerPresenter @Inject constructor(
 
         // Update the theme, when apply is clicked
         view.applyHsvThemeClicks()
-            .withLatestFrom(view.hsvThemeSelected()) { _, color -> color }
-            .withLatestFrom(billingManager.upgradeStatus) { color, upgraded ->
-                if (!upgraded) {
-                    view.showQksmsPlusSnackbar()
-                } else {
-                    theme.set(color)
-                    if (recipientId == 0L) {
-                        widgetManager.updateTheme()
-                    }
+            .withLatestFrom(view.hsvThemeSelected()) { _, color ->
+                theme.set(color)
+                if (recipientId == 0L) {
+                    widgetManager.updateTheme()
                 }
             }
             .autoDispose(view.scope())
             .subscribe()
-
-        // Show QKSMS+ activity
-        view.viewQksmsPlusClicks()
-            .autoDispose(view.scope())
-            .subscribe { navigator.showQksmsPlusActivity("settings_theme") }
 
         // Reset the theme
         view.clearHsvThemeClicks()

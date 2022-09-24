@@ -25,7 +25,6 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 33
     buildToolsVersion "33.0.0"
-    flavorDimensions "analytics"
 
     defaultConfig {
         applicationId "io.github.muntashirakon.messages"
@@ -65,11 +64,6 @@ android {
         abortOnError false
     }
 
-    productFlavors {
-        withAnalytics { dimension "analytics" }
-        noAnalytics { dimension "analytics" }
-    }
-
     if (System.getenv("CI") == "true") {
         signingConfigs.release.storeFile = file("../keystore")
         signingConfigs.release.storePassword = System.getenv("keystore_password")
@@ -80,13 +74,6 @@ android {
 
 androidExtensions {
     experimental = true
-}
-
-configurations {
-    noAnalyticsDebug
-    noAnalyticsRelease
-    withAnalyticsDebug
-    withAnalyticsRelease
 }
 
 dependencies {
@@ -185,17 +172,4 @@ dependencies {
     implementation project(":common")
     implementation project(':data')
     implementation project(':domain')
-
-    withAnalyticsImplementation 'com.google.firebase:firebase-crashlytics:17.3.0'
-    withAnalyticsImplementation "com.android.billingclient:billing:$billing_version"
-    withAnalyticsImplementation "com.android.billingclient:billing-ktx:$billing_version"
-    noAnalyticsDebug project(path: ':data', configuration: 'noAnalyticsDebug')
-    noAnalyticsRelease project(path: ':data', configuration: 'noAnalyticsRelease')
-    withAnalyticsDebug project(path: ':data', configuration: 'withAnalyticsDebug')
-    withAnalyticsRelease project(path: ':data', configuration: 'withAnalyticsRelease')
-}
-
-if (getGradle().getStartParameter().getTaskRequests().toString().contains("WithAnalytics")) {
-    apply plugin: 'com.google.gms.google-services'
-    apply plugin: 'com.google.firebase.crashlytics'
 }

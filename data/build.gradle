@@ -37,11 +37,6 @@ android {
 
         buildConfigField "String", "AMPLITUDE_API_KEY", "\"${System.getenv("AMPLITUDE_API_KEY")}\""
     }
-
-    productFlavors {
-        withAnalytics { dimension "analytics" }
-        noAnalytics { dimension "analytics" }
-    }
 }
 
 dependencies {
@@ -91,8 +86,6 @@ dependencies {
     implementation project(":android-smsmms")
     implementation project(':common')
     implementation project(':domain')
-
-    withAnalyticsImplementation "com.amplitude:android-sdk:2.16.0"
 }
 
 repositories {

@@ -106,9 +106,6 @@
             android:name=".feature.settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".feature.plus.PlusActivity"
-            android:exported="false" />
-        <activity
             android:name=".feature.gallery.GalleryActivity"
             android:theme="@style/AppTheme.Black"
             android:exported="false" />

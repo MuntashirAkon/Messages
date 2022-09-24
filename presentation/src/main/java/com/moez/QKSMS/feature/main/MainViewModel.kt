@@ -25,7 +25,6 @@ import com.moez.QKSMS.common.base.QkViewModel
 import com.moez.QKSMS.extensions.mapNotNull
 import com.moez.QKSMS.interactor.*
 import com.moez.QKSMS.listener.ContactAddedListener
-import com.moez.QKSMS.manager.BillingManager
 import com.moez.QKSMS.manager.ChangelogManager
 import com.moez.QKSMS.manager.PermissionManager
 import com.moez.QKSMS.model.SyncLog
@@ -47,7 +46,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    billingManager: BillingManager,
     contactAddedListener: ContactAddedListener,
     markAllSeen: MarkAllSeen,
     migratePreferences: MigratePreferences,
@@ -82,10 +80,6 @@ class MainViewModel @Inject constructor(
                 .sample(16, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .subscribe { syncing -> newState { copy(syncing = syncing) } }
-
-        // Update the upgraded status
-        disposables += billingManager.upgradeStatus
-                .subscribe { upgraded -> newState { copy(upgraded = upgraded) } }
 
         // Migrate the preferences from 2.7.3
         migratePreferences.execute(Unit)
@@ -245,7 +239,6 @@ class MainViewModel @Inject constructor(
                         NavItem.SCHEDULED -> navigator.showScheduled()
                         NavItem.BLOCKING -> navigator.showBlockedConversations()
                         NavItem.SETTINGS -> navigator.showSettings()
-                        NavItem.PLUS -> navigator.showQksmsPlusActivity("main_menu")
                         NavItem.HELP -> navigator.showSupport()
                         NavItem.INVITE -> navigator.showInvite()
                         else -> Unit
@@ -349,13 +342,6 @@ class MainViewModel @Inject constructor(
                 }
                 .autoDispose(view.scope())
                 .subscribe()
-
-        view.plusBannerIntent
-                .autoDispose(view.scope())
-                .subscribe {
-                    newState { copy(drawerOpen = false) }
-                    navigator.showQksmsPlusActivity("main_banner")
-                }
 
         view.conversationsSelectedIntent
                 .withLatestFrom(state) { selection, state ->

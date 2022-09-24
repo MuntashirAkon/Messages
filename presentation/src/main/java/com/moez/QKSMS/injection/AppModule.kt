@@ -28,7 +28,6 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.moez.QKSMS.blocking.BlockingClient
 import com.moez.QKSMS.blocking.BlockingManager
 import com.moez.QKSMS.common.ViewModelFactory
-import com.moez.QKSMS.common.util.BillingManagerImpl
 import com.moez.QKSMS.common.util.NotificationManagerImpl
 import com.moez.QKSMS.common.util.ShortcutManagerImpl
 import com.moez.QKSMS.feature.conversationinfo.injection.ConversationInfoComponent
@@ -87,16 +86,10 @@ class AppModule(private var application: Application) {
     // Manager
 
     @Provides
-    fun provideBillingManager(manager: BillingManagerImpl): BillingManager = manager
-
-    @Provides
     fun provideActiveConversationManager(manager: ActiveConversationManagerImpl): ActiveConversationManager = manager
 
     @Provides
     fun provideAlarmManager(manager: AlarmManagerImpl): AlarmManager = manager
-
-    @Provides
-    fun provideAnalyticsManager(manager: AnalyticsManagerImpl): AnalyticsManager = manager
 
     @Provides
     fun blockingClient(manager: BlockingManager): BlockingClient = manager

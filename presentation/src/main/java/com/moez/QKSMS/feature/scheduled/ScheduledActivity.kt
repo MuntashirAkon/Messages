@@ -46,7 +46,6 @@ class ScheduledActivity : QkThemedActivity(), ScheduledView {
     override val messageClickIntent by lazy { messageAdapter.clicks }
     override val messageMenuIntent by lazy { dialog.adapter.menuItemClicks }
     override val composeIntent by lazy { compose.clicks() }
-    override val upgradeIntent by lazy { upgrade.clicks() }
 
     private val viewModel by lazy { ViewModelProviders.of(this, viewModelFactory)[ScheduledViewModel::class.java] }
 
