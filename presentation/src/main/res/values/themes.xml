@@ -25,7 +25,7 @@
     <attr name="switchTrackEnabled" format="color" />
     <attr name="switchTrackDisabled" format="color" />
 
-    <style name="AppLaunchTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppLaunchTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:navigationBarColor">@color/backgroundDark</item>
         <item name="android:statusBarColor">@color/backgroundDark</item>
         <item name="android:windowBackground">@color/backgroundDark</item>
@@ -67,7 +67,7 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="PopupTheme" parent="ThemeOverlay.AppCompat.Light">
+    <style name="PopupTheme" parent="ThemeOverlay.Material3.Light">
         <item name="android:colorBackground">@color/backgroundLight</item>
         <item name="android:textColor">@color/textPrimary</item>
     </style>
