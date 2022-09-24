@@ -25,6 +25,5 @@ data class BackupState(
     val backupProgress: BackupRepository.Progress = BackupRepository.Progress.Idle(),
     val restoreProgress: BackupRepository.Progress = BackupRepository.Progress.Idle(),
     val lastBackup: String = "",
-    val backups: List<BackupFile> = listOf(),
-    val upgraded: Boolean = false
+    val backups: List<BackupFile> = listOf()
 )

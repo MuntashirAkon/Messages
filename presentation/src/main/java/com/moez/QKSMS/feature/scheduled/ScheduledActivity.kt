@@ -76,17 +76,11 @@ class ScheduledActivity : QkThemedActivity(), ScheduledView {
             sampleMessage.setTextColor(theme.textPrimary)
             compose.setTint(theme.textPrimary)
             compose.setBackgroundTint(theme.theme)
-            upgrade.setBackgroundTint(theme.theme)
-            upgradeIcon.setTint(theme.textPrimary)
-            upgradeLabel.setTextColor(theme.textPrimary)
         }
     }
 
     override fun render(state: ScheduledState) {
         messageAdapter.updateData(state.scheduledMessages)
-
-        compose.isVisible = state.upgraded
-        upgrade.isVisible = !state.upgraded
     }
 
     override fun showMessageOptions() {

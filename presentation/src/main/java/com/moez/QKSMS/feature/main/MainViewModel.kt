@@ -240,7 +240,6 @@ class MainViewModel @Inject constructor(
                         NavItem.BLOCKING -> navigator.showBlockedConversations()
                         NavItem.SETTINGS -> navigator.showSettings()
                         NavItem.HELP -> navigator.showSupport()
-                        NavItem.INVITE -> navigator.showInvite()
                         else -> Unit
                     }
                     drawerItem

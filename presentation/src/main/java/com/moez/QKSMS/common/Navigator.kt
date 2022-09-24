@@ -201,14 +201,6 @@ class Navigator @Inject constructor(
         startActivityExternal(intent)
     }
 
-    fun showInvite() {
-        Intent(Intent.ACTION_SEND)
-                .setType("text/plain")
-                .putExtra(Intent.EXTRA_TEXT, "http://qklabs.com/download")
-                .let { Intent.createChooser(it, null) }
-                .let(::startActivityExternal)
-    }
-
     fun addContact(address: String) {
         val intent = Intent(Intent.ACTION_INSERT)
                 .setType(ContactsContract.Contacts.CONTENT_TYPE)

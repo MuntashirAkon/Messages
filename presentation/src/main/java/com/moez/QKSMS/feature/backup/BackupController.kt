@@ -161,16 +161,6 @@ class BackupController : QkController<BackupView, BackupState, BackupPresenter>(
         backup.summary = state.lastBackup
 
         adapter.data = state.backups
-
-        fabIcon.setImageResource(when (state.upgraded) {
-            true -> R.drawable.ic_file_upload_black_24dp
-            false -> R.drawable.ic_star_black_24dp
-        })
-
-        fabLabel.setText(when (state.upgraded) {
-            true -> R.string.backup_now
-            false -> R.string.title_qksms_plus
-        })
     }
 
     override fun activityVisible(): Observable<*> = activityVisibleSubject
