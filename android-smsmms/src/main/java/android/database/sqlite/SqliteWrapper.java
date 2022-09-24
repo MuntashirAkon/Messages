@@ -23,16 +23,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
+
 import org.jetbrains.annotations.Nullable;
+
 import timber.log.Timber;
 
-/**
- * @hide
- */
-
 public final class SqliteWrapper {
-    private static final String SQLITE_EXCEPTION_DETAIL_MESSAGE
-            = "unable to open database file";
+    private static final String SQLITE_EXCEPTION_DETAIL_MESSAGE = "unable to open database file";
 
     private SqliteWrapper() {
         // Forbidden being instantiated.

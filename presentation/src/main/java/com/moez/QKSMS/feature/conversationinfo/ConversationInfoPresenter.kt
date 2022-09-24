@@ -37,7 +37,7 @@ import com.moez.QKSMS.model.Conversation
 import com.moez.QKSMS.repository.ConversationRepository
 import com.moez.QKSMS.repository.MessageRepository
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -115,15 +115,15 @@ class ConversationInfoPresenter @Inject constructor(
                     recipient.contact?.lookupKey?.let(navigator::showContact)
                             ?: navigator.addContact(recipient.address)
                 }
-                .autoDisposable(view.scope(Lifecycle.Event.ON_DESTROY)) // ... this should be the default
+                .autoDispose(view.scope(Lifecycle.Event.ON_DESTROY)) // ... this should be the default
                 .subscribe()
 
         // Copy phone number
         view.recipientLongClicks()
-                .mapNotNull(conversationRepo::getRecipient)
-                .map { recipient -> recipient.address }
-                .observeOn(AndroidSchedulers.mainThread())
-                .autoDisposable(view.scope())
+            .mapNotNull(conversationRepo::getRecipient)
+            .map { recipient -> recipient.address }
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDispose(view.scope())
                 .subscribe { address ->
                     ClipboardUtils.copy(context, address)
                     context.makeToast(R.string.info_copied_address)
@@ -131,14 +131,14 @@ class ConversationInfoPresenter @Inject constructor(
 
         // Show the theme settings for the conversation
         view.themeClicks()
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe(view::showThemePicker)
 
         // Show the conversation title dialog
         view.nameClicks()
                 .withLatestFrom(conversation) { _, conversation -> conversation }
                 .map { conversation -> conversation.name }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe(view::showNameDialog)
 
         // Set the conversation title
@@ -146,19 +146,19 @@ class ConversationInfoPresenter @Inject constructor(
                 .withLatestFrom(conversation) { name, conversation ->
                     conversationRepo.setConversationName(conversation.id, name)
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         // Show the notifications settings for the conversation
         view.notificationClicks()
                 .withLatestFrom(conversation) { _, conversation -> conversation }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { conversation -> navigator.showNotificationSettings(conversation.id) }
 
         // Toggle the archived state of the conversation
         view.archiveClicks()
                 .withLatestFrom(conversation) { _, conversation -> conversation }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { conversation ->
                     when (conversation.archived) {
                         true -> markUnarchived.execute(listOf(conversation.id))
@@ -169,24 +169,24 @@ class ConversationInfoPresenter @Inject constructor(
         // Toggle the blocked state of the conversation
         view.blockClicks()
                 .withLatestFrom(conversation) { _, conversation -> conversation }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { conversation -> view.showBlockingDialog(listOf(conversation.id), !conversation.blocked) }
 
         // Show the delete confirmation dialog
         view.deleteClicks()
                 .filter { permissionManager.isDefaultSms().also { if (!it) view.requestDefaultSms() } }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { view.showDeleteDialog() }
 
         // Delete the conversation
         view.confirmDelete()
                 .withLatestFrom(conversation) { _, conversation -> conversation }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { conversation -> deleteConversations.execute(listOf(conversation.id)) }
 
         // Media
         view.mediaClicks()
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe(navigator::showMedia)
     }
 

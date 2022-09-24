@@ -36,6 +36,7 @@ import com.moez.QKSMS.common.util.extensions.setVisible
 import com.moez.QKSMS.common.widget.PreferenceView
 import com.uber.autodispose.android.lifecycle.scope
 import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -82,11 +83,11 @@ class NotificationPrefsActivity : QkThemedActivity(), NotificationPrefsView {
 
         // Listen to clicks for all of the preferences
         (0 until preferences.childCount)
-                .map { index -> preferences.getChildAt(index) }
-                .mapNotNull { view -> view as? PreferenceView }
-                .map { preference -> preference.clicks().map { preference } }
-                .let { Observable.merge(it) }
-                .autoDisposable(scope())
+            .map { index -> preferences.getChildAt(index) }
+            .mapNotNull { view -> view as? PreferenceView }
+            .map { preference -> preference.clicks().map { preference } }
+            .let { Observable.merge(it) }
+            .autoDispose(scope())
                 .subscribe(preferenceClickIntent)
     }
 

@@ -27,16 +27,12 @@ import com.moez.QKSMS.feature.compose.editing.PhoneNumberAction
 import com.moez.QKSMS.filter.ContactFilter
 import com.moez.QKSMS.filter.ContactGroupFilter
 import com.moez.QKSMS.interactor.SetDefaultPhoneNumber
-import com.moez.QKSMS.model.Contact
-import com.moez.QKSMS.model.ContactGroup
-import com.moez.QKSMS.model.Conversation
-import com.moez.QKSMS.model.PhoneNumber
-import com.moez.QKSMS.model.Recipient
+import com.moez.QKSMS.model.*
 import com.moez.QKSMS.repository.ContactRepository
 import com.moez.QKSMS.repository.ConversationRepository
 import com.moez.QKSMS.util.PhoneNumberUtils
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
@@ -85,12 +81,12 @@ class ContactsViewModel @Inject constructor(
 
         // Update the state's query, so we know if we should show the cancel button
         view.queryChangedIntent
-                .autoDisposable(view.scope())
+            .autoDispose(view.scope())
                 .subscribe { query -> newState { copy(query = query.toString()) } }
 
         // Clear the query
         view.queryClearedIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { view.clearQuery() }
 
         // Update the list of contact suggestions based on the query input, while also filtering out any contacts
@@ -167,7 +163,7 @@ class ContactsViewModel @Inject constructor(
                     composeItems
                 }
                 .subscribeOn(Schedulers.computation())
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { items -> newState { copy(composeItems = items) } }
 
         // Listen for ComposeItems being selected, and then send them off to the number picker dialog in case
@@ -209,7 +205,7 @@ class ContactsViewModel @Inject constructor(
                 }
                 .filter { result -> result.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { result -> view.finish(result) }
     }
 

@@ -23,28 +23,17 @@ import com.moez.QKSMS.R
 import com.moez.QKSMS.common.Navigator
 import com.moez.QKSMS.common.base.QkViewModel
 import com.moez.QKSMS.extensions.mapNotNull
-import com.moez.QKSMS.interactor.DeleteConversations
-import com.moez.QKSMS.interactor.MarkAllSeen
-import com.moez.QKSMS.interactor.MarkArchived
-import com.moez.QKSMS.interactor.MarkPinned
-import com.moez.QKSMS.interactor.MarkRead
-import com.moez.QKSMS.interactor.MarkUnarchived
-import com.moez.QKSMS.interactor.MarkUnpinned
-import com.moez.QKSMS.interactor.MarkUnread
-import com.moez.QKSMS.interactor.MigratePreferences
-import com.moez.QKSMS.interactor.SyncContacts
-import com.moez.QKSMS.interactor.SyncMessages
+import com.moez.QKSMS.interactor.*
 import com.moez.QKSMS.listener.ContactAddedListener
 import com.moez.QKSMS.manager.BillingManager
 import com.moez.QKSMS.manager.ChangelogManager
 import com.moez.QKSMS.manager.PermissionManager
-import com.moez.QKSMS.manager.RatingManager
 import com.moez.QKSMS.model.SyncLog
 import com.moez.QKSMS.repository.ConversationRepository
 import com.moez.QKSMS.repository.SyncRepository
 import com.moez.QKSMS.util.Preferences
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
@@ -75,7 +64,6 @@ class MainViewModel @Inject constructor(
     private val navigator: Navigator,
     private val permissionManager: PermissionManager,
     private val prefs: Preferences,
-    private val ratingManager: RatingManager,
     private val syncContacts: SyncContacts,
     private val syncMessages: SyncMessages
 ) : QkViewModel<MainView, MainState>(MainState(page = Inbox(data = conversationRepo.getConversations()))) {
@@ -99,11 +87,6 @@ class MainViewModel @Inject constructor(
         disposables += billingManager.upgradeStatus
                 .subscribe { upgraded -> newState { copy(upgraded = upgraded) } }
 
-        // Show the rating UI
-        disposables += ratingManager.shouldShowRating
-                .subscribe { show -> newState { copy(showRating = show) } }
-
-
         // Migrate the preferences from 2.7.3
         migratePreferences.execute(Unit)
 
@@ -123,7 +106,6 @@ class MainViewModel @Inject constructor(
                     .subscribe { syncContacts.execute(Unit) }
         }
 
-        ratingManager.addSession()
         markAllSeen.execute(Unit)
     }
 
@@ -144,10 +126,10 @@ class MainViewModel @Inject constructor(
 
         // If the default SMS state or permission states change, update the ViewState
         permissions
-                .doOnNext { (defaultSms, smsPermission, contactPermission) ->
-                    newState { copy(defaultSms = defaultSms, smsPermission = smsPermission, contactPermission = contactPermission) }
-                }
-                .autoDisposable(view.scope())
+            .doOnNext { (defaultSms, smsPermission, contactPermission) ->
+                newState { copy(defaultSms = defaultSms, smsPermission = smsPermission, contactPermission = contactPermission) }
+            }
+            .autoDispose(view.scope())
                 .subscribe()
 
         // If we go from not having all permissions to having them, sync messages
@@ -155,12 +137,12 @@ class MainViewModel @Inject constructor(
                 .skip(1)
                 .filter { it.first && it.second && it.third }
                 .take(1)
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { syncMessages.execute(Unit) }
 
         // Launch screen from intent
         view.onNewIntentIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { intent ->
                     when (intent.getStringExtra("screen")) {
                         "compose" -> navigator.showConversation(intent.getLongExtra("threadId", 0))
@@ -184,7 +166,7 @@ class MainViewModel @Inject constructor(
         }
 
         view.changelogMoreIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { navigator.showChangelog() }
 
         view.queryChangedIntent
@@ -207,7 +189,7 @@ class MainViewModel @Inject constructor(
                 }
                 .observeOn(Schedulers.io())
                 .map(conversationRepo::searchConversations)
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { data -> newState { copy(page = Searching(loading = false, data = data)) } }
 
         view.activityResumedIntent
@@ -221,11 +203,11 @@ class MainViewModel @Inject constructor(
                             .doOnNext { view.themeChanged() }
                             .takeUntil(view.activityResumedIntent.filter { resumed -> resumed })
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.composeIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { navigator.showCompose() }
 
         view.homeIntent
@@ -238,11 +220,11 @@ class MainViewModel @Inject constructor(
                         else -> newState { copy(drawerOpen = true) }
                     }
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.drawerOpenIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { open -> newState { copy(drawerOpen = open) } }
 
         view.navigationIntent
@@ -278,7 +260,7 @@ class MainViewModel @Inject constructor(
                         else -> Unit
                     }
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -287,7 +269,7 @@ class MainViewModel @Inject constructor(
                     markArchived.execute(conversations)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -296,7 +278,7 @@ class MainViewModel @Inject constructor(
                     markUnarchived.execute(conversations)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -305,7 +287,7 @@ class MainViewModel @Inject constructor(
                 .withLatestFrom(view.conversationsSelectedIntent) { _, conversations ->
                     view.showDeleteDialog(conversations)
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -318,7 +300,7 @@ class MainViewModel @Inject constructor(
                 .map { conversation -> conversation.recipients }
                 .mapNotNull { recipients -> recipients[0]?.address?.takeIf { recipients.size == 1 } }
                 .doOnNext(navigator::addContact)
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -327,7 +309,7 @@ class MainViewModel @Inject constructor(
                     markPinned.execute(conversations)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -336,7 +318,7 @@ class MainViewModel @Inject constructor(
                     markUnpinned.execute(conversations)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -346,7 +328,7 @@ class MainViewModel @Inject constructor(
                     markRead.execute(conversations)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -356,7 +338,7 @@ class MainViewModel @Inject constructor(
                     markUnread.execute(conversations)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.optionsItemIntent
@@ -365,26 +347,15 @@ class MainViewModel @Inject constructor(
                     view.showBlockingDialog(conversations, true)
                     view.clearSelection()
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         view.plusBannerIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe {
                     newState { copy(drawerOpen = false) }
                     navigator.showQksmsPlusActivity("main_banner")
                 }
-
-        view.rateIntent
-                .autoDisposable(view.scope())
-                .subscribe {
-                    navigator.showRating()
-                    ratingManager.rate()
-                }
-
-        view.dismissRatingIntent
-                .autoDisposable(view.scope())
-                .subscribe { ratingManager.dismiss() }
 
         view.conversationsSelectedIntent
                 .withLatestFrom(state) { selection, state ->
@@ -408,21 +379,23 @@ class MainViewModel @Inject constructor(
                             val page = state.page.copy(addContact = add, markPinned = pin, markRead = read, selected = selected)
                             newState { copy(page = page) }
                         }
+
+                        else -> {}
                     }
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
 
         // Delete the conversation
         view.confirmDeleteIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { conversations ->
                     deleteConversations.execute(conversations)
                     view.clearSelection()
                 }
 
         view.swipeConversationIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { (threadId, direction) ->
                     val action = if (direction == ItemTouchHelper.RIGHT) prefs.swipeRight.get() else prefs.swipeLeft.get()
                     when (action) {
@@ -437,7 +410,7 @@ class MainViewModel @Inject constructor(
 
         view.undoArchiveIntent
                 .withLatestFrom(view.swipeConversationIntent) { _, pair -> pair.first }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { threadId -> markUnarchived.execute(listOf(threadId)) }
 
         view.snackbarButtonIntent
@@ -448,7 +421,7 @@ class MainViewModel @Inject constructor(
                         !state.contactPermission -> view.requestPermissions()
                     }
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
     }
 

@@ -38,7 +38,7 @@ import com.moez.QKSMS.repository.MessageRepository
 import com.moez.QKSMS.util.PhoneNumberUtils
 import com.moez.QKSMS.util.Preferences
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
@@ -105,10 +105,10 @@ abstract class QkThemedActivity : QkActivity() {
         // When certain preferences change, we need to recreate the activity
         val triggers = listOf(prefs.nightMode, prefs.night, prefs.black, prefs.textSize, prefs.systemFont)
         Observable.merge(triggers.map { it.asObservable().skip(1) })
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .autoDisposable(scope())
-                .subscribe { recreate() }
+            .debounce(400, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDispose(scope())
+            .subscribe { recreate() }
 
         // We can only set light nav bar on API 27 in attrs, but we can do it in API 26 here
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
@@ -138,15 +138,15 @@ abstract class QkThemedActivity : QkActivity() {
 
         // Update the colours of the menu items
         Observables.combineLatest(menu, theme) { menu, theme ->
-            menu.iterator().forEach { menuItem ->
-                val tint = when (menuItem.itemId) {
-                    in getColoredMenuItems() -> theme.theme
-                    else -> textSecondary
-                }
+                menu.iterator().forEach { menuItem ->
+                    val tint = when (menuItem.itemId) {
+                        in getColoredMenuItems() -> theme.theme
+                        else -> textSecondary
+                    }
 
-                menuItem.icon = menuItem.icon?.apply { setTint(tint) }
-            }
-        }.autoDisposable(scope(Lifecycle.Event.ON_DESTROY)).subscribe()
+                    menuItem.icon = menuItem.icon?.apply { setTint(tint) }
+                }
+            }.autoDispose(scope(Lifecycle.Event.ON_DESTROY)).subscribe()
     }
 
     open fun getColoredMenuItems(): List<Int> {

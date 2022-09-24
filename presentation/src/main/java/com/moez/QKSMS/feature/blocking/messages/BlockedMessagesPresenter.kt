@@ -25,7 +25,7 @@ import com.moez.QKSMS.common.base.QkPresenter
 import com.moez.QKSMS.interactor.DeleteConversations
 import com.moez.QKSMS.repository.ConversationRepository
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.rxkotlin.withLatestFrom
 import javax.inject.Inject
 
@@ -42,38 +42,38 @@ class BlockedMessagesPresenter @Inject constructor(
         super.bindIntents(view)
 
         view.menuReadyIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { newState { copy() } }
 
         view.optionsItemIntent
-                .withLatestFrom(view.selectionChanges) { itemId, conversations ->
-                    when (itemId) {
-                        R.id.block -> {
-                            view.showBlockingDialog(conversations, false)
-                            view.clearSelection()
-                        }
-                        R.id.delete -> {
-                            view.showDeleteDialog(conversations)
-                        }
+            .withLatestFrom(view.selectionChanges) { itemId, conversations ->
+                when (itemId) {
+                    R.id.block -> {
+                        view.showBlockingDialog(conversations, false)
+                        view.clearSelection()
                     }
-
+                    R.id.delete -> {
+                        view.showDeleteDialog(conversations)
+                    }
                 }
-                .autoDisposable(view.scope())
+
+            }
+            .autoDispose(view.scope())
                 .subscribe()
 
         view.confirmDeleteIntent
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { conversations ->
                     deleteConversations.execute(conversations)
                     view.clearSelection()
                 }
 
         view.conversationClicks
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { threadId -> navigator.showConversation(threadId) }
 
         view.selectionChanges
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe { selection -> newState { copy(selected = selection.size) } }
 
         view.backClicked
@@ -83,7 +83,7 @@ class BlockedMessagesPresenter @Inject constructor(
                         else -> view.clearSelection()
                     }
                 }
-                .autoDisposable(view.scope())
+                .autoDispose(view.scope())
                 .subscribe()
     }
 

@@ -28,8 +28,6 @@ import java.util.Collections;
 /**
  * A simple object for retrieving the results of a DHCP request.
  * Replaces (internally) the IPv4-only DhcpInfo class.
- *
- * @hide
  */
 public class DhcpInfoInternal {
     public String ipAddress;

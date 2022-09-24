@@ -18,6 +18,7 @@ package android.net;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import timber.log.Timber;
 
 import java.util.Collection;
@@ -28,8 +29,6 @@ import java.util.Set;
 
 /**
  * A class representing the capabilities of a link
- *
- * @hide
  */
 public class LinkCapabilities implements Parcelable {
     private static final boolean DBG = false;

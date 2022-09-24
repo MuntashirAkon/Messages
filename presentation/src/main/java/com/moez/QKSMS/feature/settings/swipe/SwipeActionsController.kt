@@ -30,18 +30,22 @@ import com.moez.QKSMS.common.util.extensions.setBackgroundTint
 import com.moez.QKSMS.common.util.extensions.setTint
 import com.moez.QKSMS.injection.appComponent
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.swipe_actions_controller.*
 import javax.inject.Inject
 
-class SwipeActionsController : QkController<SwipeActionsView, SwipeActionsState, SwipeActionsPresenter>(), SwipeActionsView {
+class SwipeActionsController : QkController<SwipeActionsView, SwipeActionsState, SwipeActionsPresenter>(),
+    SwipeActionsView {
 
-    @Inject override lateinit var presenter: SwipeActionsPresenter
-    @Inject lateinit var actionsDialog: QkDialog
-    @Inject lateinit var colors: Colors
+    @Inject
+    override lateinit var presenter: SwipeActionsPresenter
+    @Inject
+    lateinit var actionsDialog: QkDialog
+    @Inject
+    lateinit var colors: Colors
 
     /**
      * Allows us to subscribe to [actionClicks] more than once
@@ -67,10 +71,10 @@ class SwipeActionsController : QkController<SwipeActionsView, SwipeActionsState,
         left.postDelayed({ left?.animateLayoutChanges = true }, 100)
 
         Observable.merge(
-                right.clicks().map { SwipeActionsView.Action.RIGHT },
-                left.clicks().map { SwipeActionsView.Action.LEFT })
-                .autoDisposable(scope())
-                .subscribe(actionClicks)
+            right.clicks().map { SwipeActionsView.Action.RIGHT },
+            left.clicks().map { SwipeActionsView.Action.LEFT })
+            .autoDispose(scope())
+            .subscribe(actionClicks)
     }
 
     override fun onAttach(view: View) {

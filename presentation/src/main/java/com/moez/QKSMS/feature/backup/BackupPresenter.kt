@@ -29,7 +29,7 @@ import com.moez.QKSMS.manager.BillingManager
 import com.moez.QKSMS.manager.PermissionManager
 import com.moez.QKSMS.repository.BackupRepository
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
@@ -47,89 +47,91 @@ class BackupPresenter @Inject constructor(
     private val permissionManager: PermissionManager
 ) : QkPresenter<BackupView, BackupState>(BackupState()) {
 
-    private val storagePermissionSubject: Subject<Boolean> = BehaviorSubject.createDefault(permissionManager.hasStorage())
+    private val storagePermissionSubject: Subject<Boolean> =
+        BehaviorSubject.createDefault(permissionManager.hasStorage())
 
     init {
         disposables += backupRepo.getBackupProgress()
-                .sample(16, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
-                .subscribe { progress -> newState { copy(backupProgress = progress) } }
+            .sample(16, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
+            .subscribe { progress -> newState { copy(backupProgress = progress) } }
 
         disposables += backupRepo.getRestoreProgress()
-                .sample(16, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
-                .subscribe { progress -> newState { copy(restoreProgress = progress) } }
+            .sample(16, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
+            .subscribe { progress -> newState { copy(restoreProgress = progress) } }
 
         disposables += storagePermissionSubject
-                .distinctUntilChanged()
-                .switchMap { backupRepo.getBackups() }
-                .doOnNext { backups -> newState { copy(backups = backups) } }
-                .map { backups -> backups.map { it.date }.max() ?: 0L }
-                .map { lastBackup ->
-                    when (lastBackup) {
-                        0L -> context.getString(R.string.backup_never)
-                        else -> dateFormatter.getDetailedTimestamp(lastBackup)
-                    }
+            .distinctUntilChanged()
+            .switchMap { backupRepo.getBackups() }
+            .doOnNext { backups -> newState { copy(backups = backups) } }
+            .map { backups -> backups.maxOfOrNull { it.date } ?: 0L }
+            .map { lastBackup ->
+                when (lastBackup) {
+                    0L -> context.getString(R.string.backup_never)
+                    else -> dateFormatter.getDetailedTimestamp(lastBackup)
                 }
-                .startWith(context.getString(R.string.backup_loading))
-                .subscribe { lastBackup -> newState { copy(lastBackup = lastBackup) } }
+            }
+            .startWith(context.getString(R.string.backup_loading))
+            .subscribe { lastBackup -> newState { copy(lastBackup = lastBackup) } }
 
         disposables += billingManager.upgradeStatus
-                .subscribe { upgraded -> newState { copy(upgraded = upgraded) } }
+            .subscribe { upgraded -> newState { copy(upgraded = upgraded) } }
     }
 
     override fun bindIntents(view: BackupView) {
         super.bindIntents(view)
 
         view.activityVisible()
-                .map { permissionManager.hasStorage() }
-                .autoDisposable(view.scope())
-                .subscribe(storagePermissionSubject)
+            .map { permissionManager.hasStorage() }
+            .autoDispose(view.scope())
+            .subscribe(storagePermissionSubject)
 
         view.restoreClicks()
-                .withLatestFrom(
-                        backupRepo.getBackupProgress(),
-                        backupRepo.getRestoreProgress(),
-                        billingManager.upgradeStatus)
-                { _, backupProgress, restoreProgress, upgraded ->
-                    when {
-                        !upgraded -> context.makeToast(R.string.backup_restore_error_plus)
-                        backupProgress.running -> context.makeToast(R.string.backup_restore_error_backup)
-                        restoreProgress.running -> context.makeToast(R.string.backup_restore_error_restore)
-                        !permissionManager.hasStorage() -> view.requestStoragePermission()
-                        else -> view.selectFile()
-                    }
+            .withLatestFrom(
+                backupRepo.getBackupProgress(),
+                backupRepo.getRestoreProgress(),
+                billingManager.upgradeStatus
+            )
+            { _, backupProgress, restoreProgress, upgraded ->
+                when {
+                    !upgraded -> context.makeToast(R.string.backup_restore_error_plus)
+                    backupProgress.running -> context.makeToast(R.string.backup_restore_error_backup)
+                    restoreProgress.running -> context.makeToast(R.string.backup_restore_error_restore)
+                    !permissionManager.hasStorage() -> view.requestStoragePermission()
+                    else -> view.selectFile()
                 }
-                .autoDisposable(view.scope())
-                .subscribe()
+            }
+            .autoDispose(view.scope())
+            .subscribe()
 
         view.restoreFileSelected()
-                .autoDisposable(view.scope())
-                .subscribe { view.confirmRestore() }
+            .autoDispose(view.scope())
+            .subscribe { view.confirmRestore() }
 
         view.restoreConfirmed()
-                .withLatestFrom(view.restoreFileSelected()) { _, backup -> backup }
-                .autoDisposable(view.scope())
-                .subscribe { backup -> RestoreBackupService.start(context, backup.path) }
+            .withLatestFrom(view.restoreFileSelected()) { _, backup -> backup }
+            .autoDispose(view.scope())
+            .subscribe { backup -> RestoreBackupService.start(context, backup.path) }
 
         view.stopRestoreClicks()
-                .autoDisposable(view.scope())
-                .subscribe { view.stopRestore() }
+            .autoDispose(view.scope())
+            .subscribe { view.stopRestore() }
 
         view.stopRestoreConfirmed()
-                .autoDisposable(view.scope())
-                .subscribe { backupRepo.stopRestore() }
+            .autoDispose(view.scope())
+            .subscribe { backupRepo.stopRestore() }
 
         view.fabClicks()
-                .withLatestFrom(billingManager.upgradeStatus) { _, upgraded -> upgraded }
-                .autoDisposable(view.scope())
-                .subscribe { upgraded ->
-                    when {
-                        !upgraded -> navigator.showQksmsPlusActivity("backup_fab")
-                        !permissionManager.hasStorage() -> view.requestStoragePermission()
-                        upgraded -> performBackup.execute(Unit)
-                    }
+            .withLatestFrom(billingManager.upgradeStatus) { _, upgraded -> upgraded }
+            .autoDispose(view.scope())
+            .subscribe { upgraded ->
+                when {
+                    !upgraded -> navigator.showQksmsPlusActivity("backup_fab")
+                    !permissionManager.hasStorage() -> view.requestStoragePermission()
+                    upgraded -> performBackup.execute(Unit)
                 }
+            }
     }
 
 }

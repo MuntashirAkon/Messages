@@ -35,55 +35,9 @@ import com.moez.QKSMS.feature.conversationinfo.injection.ConversationInfoCompone
 import com.moez.QKSMS.feature.themepicker.injection.ThemePickerComponent
 import com.moez.QKSMS.listener.ContactAddedListener
 import com.moez.QKSMS.listener.ContactAddedListenerImpl
-import com.moez.QKSMS.manager.ActiveConversationManager
-import com.moez.QKSMS.manager.ActiveConversationManagerImpl
-import com.moez.QKSMS.manager.AlarmManager
-import com.moez.QKSMS.manager.AlarmManagerImpl
-import com.moez.QKSMS.manager.AnalyticsManager
-import com.moez.QKSMS.manager.AnalyticsManagerImpl
-import com.moez.QKSMS.manager.BillingManager
-import com.moez.QKSMS.manager.ChangelogManager
-import com.moez.QKSMS.manager.ChangelogManagerImpl
-import com.moez.QKSMS.manager.KeyManager
-import com.moez.QKSMS.manager.KeyManagerImpl
-import com.moez.QKSMS.manager.NotificationManager
-import com.moez.QKSMS.manager.PermissionManager
-import com.moez.QKSMS.manager.PermissionManagerImpl
-import com.moez.QKSMS.manager.RatingManager
-import com.moez.QKSMS.manager.ReferralManager
-import com.moez.QKSMS.manager.ReferralManagerImpl
-import com.moez.QKSMS.manager.ShortcutManager
-import com.moez.QKSMS.manager.WidgetManager
-import com.moez.QKSMS.manager.WidgetManagerImpl
-import com.moez.QKSMS.mapper.CursorToContact
-import com.moez.QKSMS.mapper.CursorToContactGroup
-import com.moez.QKSMS.mapper.CursorToContactGroupImpl
-import com.moez.QKSMS.mapper.CursorToContactGroupMember
-import com.moez.QKSMS.mapper.CursorToContactGroupMemberImpl
-import com.moez.QKSMS.mapper.CursorToContactImpl
-import com.moez.QKSMS.mapper.CursorToConversation
-import com.moez.QKSMS.mapper.CursorToConversationImpl
-import com.moez.QKSMS.mapper.CursorToMessage
-import com.moez.QKSMS.mapper.CursorToMessageImpl
-import com.moez.QKSMS.mapper.CursorToPart
-import com.moez.QKSMS.mapper.CursorToPartImpl
-import com.moez.QKSMS.mapper.CursorToRecipient
-import com.moez.QKSMS.mapper.CursorToRecipientImpl
-import com.moez.QKSMS.mapper.RatingManagerImpl
-import com.moez.QKSMS.repository.BackupRepository
-import com.moez.QKSMS.repository.BackupRepositoryImpl
-import com.moez.QKSMS.repository.BlockingRepository
-import com.moez.QKSMS.repository.BlockingRepositoryImpl
-import com.moez.QKSMS.repository.ContactRepository
-import com.moez.QKSMS.repository.ContactRepositoryImpl
-import com.moez.QKSMS.repository.ConversationRepository
-import com.moez.QKSMS.repository.ConversationRepositoryImpl
-import com.moez.QKSMS.repository.MessageRepository
-import com.moez.QKSMS.repository.MessageRepositoryImpl
-import com.moez.QKSMS.repository.ScheduledMessageRepository
-import com.moez.QKSMS.repository.ScheduledMessageRepositoryImpl
-import com.moez.QKSMS.repository.SyncRepository
-import com.moez.QKSMS.repository.SyncRepositoryImpl
+import com.moez.QKSMS.manager.*
+import com.moez.QKSMS.mapper.*
+import com.moez.QKSMS.repository.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -160,13 +114,7 @@ class AppModule(private var application: Application) {
     fun providePermissionsManager(manager: PermissionManagerImpl): PermissionManager = manager
 
     @Provides
-    fun provideRatingManager(manager: RatingManagerImpl): RatingManager = manager
-
-    @Provides
     fun provideShortcutManager(manager: ShortcutManagerImpl): ShortcutManager = manager
-
-    @Provides
-    fun provideReferralManager(manager: ReferralManagerImpl): ReferralManager = manager
 
     @Provides
     fun provideWidgetManager(manager: WidgetManagerImpl): WidgetManager = manager

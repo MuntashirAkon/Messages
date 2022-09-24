@@ -24,7 +24,7 @@ import com.moez.QKSMS.R
 import com.moez.QKSMS.common.base.QkPresenter
 import com.moez.QKSMS.util.Preferences
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
 import javax.inject.Inject
@@ -38,34 +38,48 @@ class SwipeActionsPresenter @Inject constructor(
         val actionLabels = context.resources.getStringArray(R.array.settings_swipe_actions)
 
         disposables += prefs.swipeRight.asObservable()
-                .subscribe { action -> newState { copy(rightLabel = actionLabels[action], rightIcon = iconForAction(action)) } }
+            .subscribe { action ->
+                newState {
+                    copy(
+                        rightLabel = actionLabels[action],
+                        rightIcon = iconForAction(action)
+                    )
+                }
+            }
 
         disposables += prefs.swipeLeft.asObservable()
-                .subscribe { action -> newState { copy(leftLabel = actionLabels[action], leftIcon = iconForAction(action)) } }
+            .subscribe { action ->
+                newState {
+                    copy(
+                        leftLabel = actionLabels[action],
+                        leftIcon = iconForAction(action)
+                    )
+                }
+            }
     }
 
     override fun bindIntents(view: SwipeActionsView) {
         super.bindIntents(view)
 
         view.actionClicks()
-                .map { action ->
-                    when (action) {
-                        SwipeActionsView.Action.RIGHT -> prefs.swipeRight.get()
-                        SwipeActionsView.Action.LEFT -> prefs.swipeLeft.get()
-                    }
+            .map { action ->
+                when (action) {
+                    SwipeActionsView.Action.RIGHT -> prefs.swipeRight.get()
+                    SwipeActionsView.Action.LEFT -> prefs.swipeLeft.get()
                 }
-                .autoDisposable(view.scope())
-                .subscribe(view::showSwipeActions)
+            }
+            .autoDispose(view.scope())
+            .subscribe(view::showSwipeActions)
 
         view.actionSelected()
-                .withLatestFrom(view.actionClicks()) { actionId, action ->
-                    when (action) {
-                        SwipeActionsView.Action.RIGHT -> prefs.swipeRight.set(actionId)
-                        SwipeActionsView.Action.LEFT -> prefs.swipeLeft.set(actionId)
-                    }
+            .withLatestFrom(view.actionClicks()) { actionId, action ->
+                when (action) {
+                    SwipeActionsView.Action.RIGHT -> prefs.swipeRight.set(actionId)
+                    SwipeActionsView.Action.LEFT -> prefs.swipeLeft.set(actionId)
                 }
-                .autoDisposable(view.scope())
-                .subscribe()
+            }
+            .autoDispose(view.scope())
+            .subscribe()
     }
 
     @DrawableRes

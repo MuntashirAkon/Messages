@@ -19,7 +19,6 @@
 package com.moez.QKSMS.feature.plus.experiment
 
 import android.content.Context
-import androidx.annotation.StringRes
 import com.moez.QKSMS.R
 import com.moez.QKSMS.experiment.Experiment
 import com.moez.QKSMS.experiment.Variant
@@ -29,7 +28,7 @@ import javax.inject.Inject
 class UpgradeButtonExperiment @Inject constructor(
     context: Context,
     analytics: AnalyticsManager
-) : Experiment<@StringRes Int>(context, analytics) {
+) : Experiment<Int>(context, analytics) {
 
     override val key: String = "Upgrade Button"
 

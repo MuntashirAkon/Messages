@@ -26,8 +26,6 @@ import java.util.Collection;
 
 /**
  * Native methods for managing network interfaces.
- * <p/>
- * {@hide}
  */
 public class NetworkUtilsHelper {
 
@@ -191,7 +189,7 @@ public class NetworkUtilsHelper {
     /**
      * Get InetAddress masked with prefixLength.  Will never return null.
      *
-     * @param IP           address which will be masked with specified prefixLength
+     * @param address      address which will be masked with specified prefixLength
      * @param prefixLength the prefixLength used to mask the IP
      */
     public static InetAddress getNetworkPart(InetAddress address, int prefixLength) {

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
   ~
   ~ This file is part of QKSMS.
@@ -24,6 +23,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- Used for starting foreground service for backup/restore on Android P+ -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -48,7 +48,8 @@
 
         <activity
             android:name=".feature.main.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,7 +60,8 @@
         </activity>
         <activity
             android:name=".feature.compose.ComposeActivity"
-            android:parentActivityName=".feature.main.MainActivity">
+            android:parentActivityName=".feature.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -100,93 +102,152 @@
                 android:name="android.service.chooser.chooser_target_service"
                 android:value=".common.util.QkChooserTargetService" />
         </activity>
-        <activity android:name=".feature.settings.SettingsActivity" />
-        <activity android:name=".feature.plus.PlusActivity" />
+        <activity
+            android:name=".feature.settings.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.plus.PlusActivity"
+            android:exported="false" />
         <activity
             android:name=".feature.gallery.GalleryActivity"
-            android:theme="@style/AppTheme.Black" />
-        <activity android:name=".feature.conversationinfo.ConversationInfoActivity" />
-        <activity android:name=".feature.notificationprefs.NotificationPrefsActivity" />
-        <activity android:name=".feature.blocking.BlockingActivity" />
+            android:theme="@style/AppTheme.Black"
+            android:exported="false" />
+        <activity
+            android:name=".feature.conversationinfo.ConversationInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.notificationprefs.NotificationPrefsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.blocking.BlockingActivity"
+            android:exported="false" />
         <activity
             android:name=".feature.qkreply.QkReplyActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=""
             android:theme="@style/AppThemeDialog"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".feature.scheduled.ScheduledActivity" />
-        <activity android:name=".feature.backup.BackupActivity" />
-        <activity android:name=".feature.contacts.ContactsActivity" />
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".feature.scheduled.ScheduledActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.backup.BackupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".feature.contacts.ContactsActivity"
+            android:exported="false" />
 
-        <receiver android:name=".receiver.BootReceiver">
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.DefaultSmsChangedReceiver">
+        <receiver
+            android:name=".receiver.DefaultSmsChangedReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.provider.action.DEFAULT_SMS_PACKAGE_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.DeleteMessagesReceiver" />
+        <receiver
+            android:name=".receiver.DeleteMessagesReceiver"
+            android:exported="false" />
         <receiver
             android:name=".receiver.SmsReceiver"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:permission="android.permission.BROADCAST_SMS"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.MmsReceiver"
-            android:permission="android.permission.BROADCAST_WAP_PUSH">
+            android:permission="android.permission.BROADCAST_WAP_PUSH"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.SmsSentReceiver" />
-        <receiver android:name=".receiver.SmsDeliveredReceiver" />
+        <receiver
+            android:name=".receiver.SmsSentReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.SmsDeliveredReceiver"
+            android:exported="false" />
         <receiver
             android:name=".receiver.MmsSentReceiver"
-            android:taskAffinity="com.moez.QKSMS.MMS_SENT" />
+            android:taskAffinity="${applicationId}.MMS_SENT"
+            android:exported="false" />
         <receiver
             android:name=".receiver.MmsUpdatedReceiver"
-            android:taskAffinity="com.moez.QKSMS.MMS_UPDATED" />
+            android:taskAffinity="${applicationId}.MMS_UPDATED"
+            android:exported="false" />
         <receiver
             android:name=".receiver.MmsReceivedReceiver"
-            android:taskAffinity="com.klinker.android.messaging.MMS_RECEIVED" />
-        <receiver android:name=".receiver.MarkArchivedReceiver" />
-        <receiver android:name=".receiver.BlockThreadReceiver" />
-        <receiver android:name=".receiver.MarkSeenReceiver" />
-        <receiver android:name=".receiver.MarkReadReceiver" />
-        <receiver android:name=".receiver.RemoteMessagingReceiver" />
-        <receiver android:name=".receiver.NightModeReceiver" />
-        <receiver android:name=".receiver.SmsProviderChangedReceiver">
+            android:taskAffinity="com.klinker.android.messaging.MMS_RECEIVED"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.MarkArchivedReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.BlockThreadReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.MarkSeenReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.MarkReadReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.RemoteMessagingReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.NightModeReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".receiver.SmsProviderChangedReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.provider.action.EXTERNAL_PROVIDER_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.SendScheduledMessageReceiver" />
-        <receiver android:name=".feature.widget.WidgetProvider">
+        <receiver
+            android:name=".receiver.SendScheduledMessageReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".feature.widget.WidgetProvider"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.moez.QKSMS.intent.action.ACTION_NOTIFY_DATASET_CHANGED" />
+                <action android:name="${applicationId}.intent.action.ACTION_NOTIFY_DATASET_CHANGED" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
-        <receiver android:name=".receiver.SendSmsReceiver" />
+        <receiver
+            android:name=".receiver.SendSmsReceiver"
+            android:exported="false" />
 
-        <service android:name="com.android.mms.transaction.TransactionService" />
-        <service android:name=".feature.backup.RestoreBackupService" />
+        <service
+            android:name="com.android.mms.transaction.TransactionService"
+            android:exported="false" />
+        <service
+            android:name=".feature.backup.RestoreBackupService"
+            android:exported="false" />
         <service
             android:name=".feature.widget.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS" />
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="true" />
         <service
             android:name=".service.AutoDeleteService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
         <service
             android:name=".service.HeadlessSmsSendService"
             android:exported="true"
@@ -204,6 +265,7 @@
         <service
             android:name=".common.util.QkChooserTargetService"
             android:label="@string/app_name"
+            android:exported="false"
             android:permission="android.permission.BIND_CHOOSER_TARGET_SERVICE">
             <intent-filter>
                 <action android:name="android.service.chooser.ChooserTargetService" />

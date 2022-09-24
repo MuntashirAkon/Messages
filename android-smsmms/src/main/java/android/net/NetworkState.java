@@ -21,8 +21,6 @@ import android.os.Parcelable;
 
 /**
  * Snapshot of network state.
- *
- * @hide
  */
 public class NetworkState implements Parcelable {
 

@@ -26,8 +26,6 @@ import java.net.UnknownHostException;
 
 /**
  * Identifies an address of a network link
- *
- * @hide
  */
 public class LinkAddress implements Parcelable {
     /**

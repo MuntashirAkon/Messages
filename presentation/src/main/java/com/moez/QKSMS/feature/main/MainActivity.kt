@@ -59,7 +59,7 @@ import com.moez.QKSMS.feature.conversations.ConversationsAdapter
 import com.moez.QKSMS.manager.ChangelogManager
 import com.moez.QKSMS.repository.SyncRepository
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
+import com.uber.autodispose.autoDispose
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -107,8 +107,6 @@ class MainActivity : QkThemedActivity(), MainView {
     }
     override val optionsItemIntent: Subject<Int> = PublishSubject.create()
     override val plusBannerIntent by lazy { plusBanner.clicks() }
-    override val dismissRatingIntent by lazy { rateDismiss.clicks() }
-    override val rateIntent by lazy { rateOkay.clicks() }
     override val conversationsSelectedIntent by lazy { conversationsAdapter.selectionChanges }
     override val confirmDeleteIntent: Subject<List<Long>> = PublishSubject.create()
     override val swipeConversationIntent by lazy { itemTouchCallback.swipes }
@@ -134,7 +132,7 @@ class MainActivity : QkThemedActivity(), MainView {
 
         (snackbar as? ViewStub)?.setOnInflateListener { _, _ ->
             snackbarButton.clicks()
-                    .autoDisposable(scope(Lifecycle.Event.ON_DESTROY))
+                    .autoDispose(scope(Lifecycle.Event.ON_DESTROY))
                     .subscribe(snackbarButtonIntent)
         }
 
@@ -153,11 +151,11 @@ class MainActivity : QkThemedActivity(), MainView {
         conversationsAdapter.autoScrollToStart(recyclerView)
 
         // Don't allow clicks to pass through the drawer layout
-        drawer.clicks().autoDisposable(scope()).subscribe()
+        drawer.clicks().autoDispose(scope()).subscribe()
 
         // Set the theme color tint to the recyclerView, progressbar, and FAB
         theme
-                .autoDisposable(scope())
+                .autoDispose(scope())
                 .subscribe { theme ->
                     // Set the color for the drawer icons
                     val states = arrayOf(
@@ -179,7 +177,6 @@ class MainActivity : QkThemedActivity(), MainView {
                     syncingProgress?.progressTintList = ColorStateList.valueOf(theme.theme)
                     syncingProgress?.indeterminateTintList = ColorStateList.valueOf(theme.theme)
                     plusIcon.setTint(theme.theme)
-                    rateIcon.setTint(theme.theme)
                     compose.setBackgroundTint(theme.theme)
 
                     // Set the FAB compose icon color
@@ -245,7 +242,6 @@ class MainActivity : QkThemedActivity(), MainView {
         }
         plus.isVisible = state.upgraded
         plusBanner.isVisible = !state.upgraded
-        rateLayout.setVisible(state.showRating)
 
         compose.setVisible(state.page is Inbox || state.page is Archived)
         conversationsAdapter.emptyView = empty.takeIf { state.page is Inbox || state.page is Archived }

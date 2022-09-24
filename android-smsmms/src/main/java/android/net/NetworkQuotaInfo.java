@@ -21,8 +21,6 @@ import android.os.Parcelable;
 
 /**
  * Information about quota status on a specific network.
- *
- * @hide
  */
 public class NetworkQuotaInfo implements Parcelable {
     private final long mEstimatedBytes;
@@ -31,18 +29,12 @@ public class NetworkQuotaInfo implements Parcelable {
 
     public static final long NO_LIMIT = -1;
 
-    /**
-     * {@hide}
-     */
     public NetworkQuotaInfo(long estimatedBytes, long softLimitBytes, long hardLimitBytes) {
         mEstimatedBytes = estimatedBytes;
         mSoftLimitBytes = softLimitBytes;
         mHardLimitBytes = hardLimitBytes;
     }
 
-    /**
-     * {@hide}
-     */
     public NetworkQuotaInfo(Parcel in) {
         mEstimatedBytes = in.readLong();
         mSoftLimitBytes = in.readLong();
