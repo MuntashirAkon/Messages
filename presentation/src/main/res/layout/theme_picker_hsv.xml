@@ -45,14 +45,14 @@
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/picker" />
+        app:layout_constraintTop_toBottomOf="@id/picker"
+        tools:visibility="visible"/>
 
-    <View
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/hexSeparator"
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:background="?android:attr/divider"
         app:layout_constraintBottom_toBottomOf="@id/hexLabel"
         app:layout_constraintStart_toEndOf="@id/hexLabel"
         app:layout_constraintTop_toTopOf="@id/hexLabel" />
@@ -94,21 +94,20 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="applyDivider, clear, apply" />
 
-    <View
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/applyDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/divider"
         app:layout_constraintBottom_toTopOf="@id/clear" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/clear"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="?attr/selectableItemBackground"
         android:padding="16dp"
         android:src="@drawable/ic_cancel_black_24dp"
-        android:tint="?android:attr/textColorSecondary"
+        app:tint="?android:attr/textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

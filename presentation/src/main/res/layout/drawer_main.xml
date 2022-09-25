@@ -24,18 +24,18 @@
     android:layout_height="match_parent"
     android:background="?android:attr/windowBackground">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/inbox"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/inboxIcon"
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_inbox_black_24dp"
@@ -45,13 +45,13 @@
                 style="@style/DrawerText"
                 android:text="@string/drawer_inbox" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/archived"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/archivedIcon"
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_archive_white_24dp"
@@ -61,97 +61,96 @@
                 style="@style/DrawerText"
                 android:text="@string/drawer_archived" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="?android:attr/divider" />
+            android:layout_marginBottom="8dp" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/backup"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_import_export_black_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <com.moez.QKSMS.common.widget.QkTextView
                 style="@style/DrawerText"
                 android:text="@string/backup_title" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/scheduled"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_event_black_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <com.moez.QKSMS.common.widget.QkTextView
                 style="@style/DrawerText"
                 android:text="@string/drawer_scheduled" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/blocking"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_block_white_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <com.moez.QKSMS.common.widget.QkTextView
                 style="@style/DrawerText"
                 android:text="@string/drawer_blocking" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="?android:attr/divider" />
+            android:layout_marginBottom="8dp" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/settings"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_settings_black_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <com.moez.QKSMS.common.widget.QkTextView
                 style="@style/DrawerText"
                 android:text="@string/drawer_settings" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/help"
+            android:visibility="gone"
             style="@style/DrawerRow">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 style="@style/DrawerIcon"
                 android:src="@drawable/ic_help_black_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <com.moez.QKSMS.common.widget.QkTextView
                 style="@style/DrawerText"
                 android:text="@string/drawer_help" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

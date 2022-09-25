@@ -33,7 +33,6 @@ import com.moez.QKSMS.BuildConfig
 import com.moez.QKSMS.feature.backup.BackupActivity
 import com.moez.QKSMS.feature.blocking.BlockingActivity
 import com.moez.QKSMS.feature.compose.ComposeActivity
-import com.moez.QKSMS.feature.conversationinfo.ConversationInfoActivity
 import com.moez.QKSMS.feature.gallery.GalleryActivity
 import com.moez.QKSMS.feature.notificationprefs.NotificationPrefsActivity
 import com.moez.QKSMS.feature.scheduled.ScheduledActivity
@@ -94,12 +93,6 @@ class Navigator @Inject constructor(
         val intent = Intent(context, ComposeActivity::class.java)
                 .putExtra("threadId", threadId)
                 .putExtra("query", query)
-        startActivity(intent)
-    }
-
-    fun showConversationInfo(threadId: Long) {
-        val intent = Intent(context, ConversationInfoActivity::class.java)
-        intent.putExtra("threadId", threadId)
         startActivity(intent)
     }
 

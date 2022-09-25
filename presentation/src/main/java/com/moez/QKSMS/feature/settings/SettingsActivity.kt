@@ -25,7 +25,7 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.moez.QKSMS.R
 import com.moez.QKSMS.common.base.QkThemedActivity
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.container_activity.*
+import kotlinx.android.synthetic.main.activity_container.*
 
 class SettingsActivity : QkThemedActivity() {
 
@@ -34,7 +34,7 @@ class SettingsActivity : QkThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.container_activity)
+        setContentView(R.layout.activity_container)
 
         router = Conductor.attachRouter(this, container, savedInstanceState)
         if (!router.hasRootController()) {

@@ -52,4 +52,4 @@ interface MainView : QkView<MainState> {
 
 }
 
-enum class NavItem { BACK, INBOX, ARCHIVED, BACKUP, SCHEDULED, BLOCKING, SETTINGS, HELP, INVITE }
+enum class NavItem { BACK, INBOX, ARCHIVED, BACKUP, SCHEDULED, BLOCKING, SETTINGS, HELP, }

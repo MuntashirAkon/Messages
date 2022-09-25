@@ -38,7 +38,7 @@ import javax.inject.Inject
 class ChipsAdapter @Inject constructor() : QkAdapter<Recipient>() {
 
     var view: RecyclerView? = null
-    val chipDeleted: PublishSubject<Recipient> = PublishSubject.create<Recipient>()
+    val chipDeleted: PublishSubject<Recipient> = PublishSubject.create()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QkViewHolder {
         val inflater = LayoutInflater.from(parent.context)

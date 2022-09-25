@@ -35,13 +35,12 @@ import com.moez.QKSMS.common.util.extensions.animateLayoutChanges
 import com.moez.QKSMS.common.util.extensions.setVisible
 import com.moez.QKSMS.common.widget.PreferenceView
 import com.uber.autodispose.android.lifecycle.scope
-import com.uber.autodispose.autoDisposable
 import com.uber.autodispose.autoDispose
 import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.notification_prefs_activity.*
+import kotlinx.android.synthetic.main.activity_notification_prefs.*
 import kotlinx.android.synthetic.main.settings_switch_widget.view.*
 import javax.inject.Inject
 
@@ -63,7 +62,7 @@ class NotificationPrefsActivity : QkThemedActivity(), NotificationPrefsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.notification_prefs_activity)
+        setContentView(R.layout.activity_notification_prefs)
         setTitle(R.string.title_notification_prefs)
         showBackButton(true)
         viewModel.bindView(this)

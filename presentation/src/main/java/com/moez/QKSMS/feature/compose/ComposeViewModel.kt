@@ -295,7 +295,7 @@ class ComposeViewModel @Inject constructor(
                 .filter { it == R.id.info }
                 .withLatestFrom(conversation) { _, conversation -> conversation }
                 .autoDispose(view.scope())
-                .subscribe { conversation -> navigator.showConversationInfo(conversation.id) }
+                .subscribe { conversation -> view.showConversationInfo(conversation.id) }
 
         // Copy the message contents
         view.optionsItemIntent

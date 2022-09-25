@@ -40,7 +40,7 @@ import com.moez.QKSMS.feature.compose.MessagesAdapter
 import dagger.android.AndroidInjection
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.qkreply_activity.*
+import kotlinx.android.synthetic.main.activity_qkreply.*
 import javax.inject.Inject
 
 class QkReplyActivity : QkThemedActivity(), QkReplyView {
@@ -61,7 +61,7 @@ class QkReplyActivity : QkThemedActivity(), QkReplyView {
         super.onCreate(savedInstanceState)
 
         setFinishOnTouchOutside(prefs.qkreplyTapDismiss.get())
-        setContentView(R.layout.qkreply_activity)
+        setContentView(R.layout.activity_qkreply)
         window.setBackgroundDrawable(null)
         window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)

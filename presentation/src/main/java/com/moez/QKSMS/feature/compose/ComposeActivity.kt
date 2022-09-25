@@ -36,6 +36,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -48,6 +49,7 @@ import com.moez.QKSMS.common.util.DateFormatter
 import com.moez.QKSMS.common.util.extensions.*
 import com.moez.QKSMS.feature.compose.editing.ChipsAdapter
 import com.moez.QKSMS.feature.contacts.ContactsActivity
+import com.moez.QKSMS.feature.conversationinfo.ConversationsInfoDialog
 import com.moez.QKSMS.model.Attachment
 import com.moez.QKSMS.model.Recipient
 import com.uber.autodispose.android.lifecycle.scope
@@ -56,7 +58,7 @@ import dagger.android.AndroidInjection
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.compose_activity.*
+import kotlinx.android.synthetic.main.activity_compose.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -82,7 +84,7 @@ class ComposeActivity : QkThemedActivity(), ComposeView {
     override val activityVisibleIntent: Subject<Boolean> = PublishSubject.create()
     override val chipsSelectedIntent: Subject<HashMap<String, String?>> = PublishSubject.create()
     override val chipDeletedIntent: Subject<Recipient> by lazy { chipsAdapter.chipDeleted }
-    override val menuReadyIntent: Observable<Unit> = menu.map { Unit }
+    override val menuReadyIntent: Observable<Unit> = menu.map { }
     override val optionsItemIntent: Subject<Int> = PublishSubject.create()
     override val sendAsGroupIntent by lazy { sendAsGroupBackground.clicks() }
     override val messageClickIntent: Subject<Long> by lazy { messageAdapter.clicks }
@@ -112,7 +114,7 @@ class ComposeActivity : QkThemedActivity(), ComposeView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.compose_activity)
+        setContentView(R.layout.activity_compose)
         showBackButton(true)
         viewModel.bindView(this)
 
@@ -244,6 +246,13 @@ class ComposeActivity : QkThemedActivity(), ComposeView {
         navigator.showDefaultSmsDialog(this)
     }
 
+    override fun showConversationInfo(threadId: Long) {
+        val dialog = ConversationsInfoDialog()
+        val args = Bundle()
+        args.putLong("threadId", threadId)
+        dialog.arguments = args
+        dialog.show(supportFragmentManager, ConversationsInfoDialog.TAG)
+    }
     override fun requestStoragePermission() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 0)
     }
