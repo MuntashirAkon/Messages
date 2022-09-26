@@ -160,14 +160,14 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$coroutines_version"
 
     implementation "com.github.chrisbanes:PhotoView:2.0.0"
+    implementation 'com.callcontrol:datashare:1.2.0'
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
     implementation "com.google.android:flexbox:0.3.1"
     implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation 'io.michaelrocks:libphonenumber-android:8.10.16'
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
     implementation "me.leolin:ShortcutBadger:1.1.22"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(":android-smsmms")
-    implementation project(":common")
-    implementation project(':data')
-    implementation project(':domain')
 }

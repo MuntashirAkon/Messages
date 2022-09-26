@@ -1,2 +1,2 @@
-include ':app', ':android-smsmms', ':domain', ':data', ':common'
+include ':app', ':android-smsmms'
 rootProject.name = "Messages"

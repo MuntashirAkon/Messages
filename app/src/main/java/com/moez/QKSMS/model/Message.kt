@@ -122,10 +122,10 @@ open class Message : RealmObject() {
             val sb = StringBuilder()
 
             // Add subject
-            getCleansedSubject().takeIf { it.isNotEmpty() }?.run(sb::appendln)
+            getCleansedSubject().takeIf { it.isNotEmpty() }?.run(sb::appendLine)
 
             // Add parts
-            parts.mapNotNull { it.getSummary() }.forEach { summary -> sb.appendln(summary) }
+            parts.mapNotNull { it.getSummary() }.forEach { summary -> sb.appendLine(summary) }
 
             sb.toString().trim()
         }
