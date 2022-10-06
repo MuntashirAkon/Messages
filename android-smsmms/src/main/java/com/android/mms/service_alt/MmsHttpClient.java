@@ -18,6 +18,7 @@ package com.android.mms.service_alt;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.android.mms.service_alt.exception.MmsHttpException;
 import com.squareup.okhttp.ConnectionPool;
 import com.squareup.okhttp.ConnectionSpec;
@@ -25,14 +26,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.internal.Internal;
 import com.squareup.okhttp.internal.huc.HttpURLConnectionImpl;
 import com.squareup.okhttp.internal.huc.HttpsURLConnectionImpl;
-import timber.log.Timber;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -50,11 +46,18 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+
+import timber.log.Timber;
 
 /**
  * MMS HTTP client for sending and downloading MMS messages
@@ -258,10 +261,10 @@ public class MmsHttpClient {
                     return null;
                 }
             });
-            okHttpClient.setConnectionSpecs(Arrays.asList(ConnectionSpec.CLEARTEXT));
+            okHttpClient.setConnectionSpecs(Collections.singletonList(ConnectionSpec.CLEARTEXT));
             okHttpClient.setConnectionPool(new ConnectionPool(3, 60000));
             okHttpClient.setSocketFactory(SocketFactory.getDefault());
-            Internal.instance.setNetwork(okHttpClient, mHostResolver);
+            okHttpClient.setDns(mHostResolver);
 
             if (proxy != null) {
                 okHttpClient.setProxy(proxy);
@@ -270,14 +273,14 @@ public class MmsHttpClient {
             return new HttpURLConnectionImpl(url, okHttpClient);
         } else if (protocol.equals("https")) {
             okHttpClient = new OkHttpClient();
-            okHttpClient.setProtocols(Arrays.asList(Protocol.HTTP_1_1));
+            okHttpClient.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
             HostnameVerifier verifier = HttpsURLConnection.getDefaultHostnameVerifier();
             okHttpClient.setHostnameVerifier(verifier);
             okHttpClient.setSslSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory());
             okHttpClient.setProxySelector(new ProxySelector() {
                 @Override
                 public List<Proxy> select(URI uri) {
-                    return Arrays.asList(proxy);
+                    return Collections.singletonList(proxy);
                 }
 
                 @Override
@@ -298,7 +301,7 @@ public class MmsHttpClient {
             });
             okHttpClient.setConnectionSpecs(Arrays.asList(ConnectionSpec.CLEARTEXT));
             okHttpClient.setConnectionPool(new ConnectionPool(3, 60000));
-            Internal.instance.setNetwork(okHttpClient, mHostResolver);
+            okHttpClient.setDns(mHostResolver);
 
             return new HttpsURLConnectionImpl(url, okHttpClient);
         } else {
