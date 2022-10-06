@@ -108,20 +108,20 @@ class MainViewModel @Inject constructor(
 
         when {
             !permissionManager.isDefaultSms() -> view.requestDefaultSms()
-            !permissionManager.hasReadSms() || !permissionManager.hasContacts() -> view.requestPermissions()
+            !permissionManager.hasReadSms() || !permissionManager.hasContacts() || !permissionManager.hasNotification() -> view.requestPermissions()
         }
 
         val permissions = view.activityResumedIntent
                 .filter { resumed -> resumed }
                 .observeOn(Schedulers.io())
-                .map { Triple(permissionManager.isDefaultSms(), permissionManager.hasReadSms(), permissionManager.hasContacts()) }
+                .map { listOf(permissionManager.isDefaultSms(), permissionManager.hasReadSms(), permissionManager.hasContacts(), permissionManager.hasNotification()) }
                 .distinctUntilChanged()
                 .share()
 
         // If the default SMS state or permission states change, update the ViewState
         permissions
-            .doOnNext { (defaultSms, smsPermission, contactPermission) ->
-                newState { copy(defaultSms = defaultSms, smsPermission = smsPermission, contactPermission = contactPermission) }
+            .doOnNext { perms ->
+                newState { copy(defaultSms = perms[0], smsPermission = perms[1], contactPermission = perms[2], notificationPermission = perms[3]) }
             }
             .autoDispose(view.scope())
                 .subscribe()
@@ -129,7 +129,7 @@ class MainViewModel @Inject constructor(
         // If we go from not having all permissions to having them, sync messages
         permissions
                 .skip(1)
-                .filter { it.first && it.second && it.third }
+                .filter { it[0] && it[1] && it[2] && it[3] }
                 .take(1)
                 .autoDispose(view.scope())
                 .subscribe { syncMessages.execute(Unit) }
@@ -404,6 +404,7 @@ class MainViewModel @Inject constructor(
                         !state.defaultSms -> view.requestDefaultSms()
                         !state.smsPermission -> view.requestPermissions()
                         !state.contactPermission -> view.requestPermissions()
+                        !state.notificationPermission -> view.requestPermissions()
                     }
                 }
                 .autoDispose(view.scope())

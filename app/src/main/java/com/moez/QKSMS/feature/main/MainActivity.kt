@@ -285,7 +285,7 @@ class MainActivity : QkThemedActivity(), MainView {
         when (state.syncing) {
             is SyncRepository.SyncProgress.Idle -> {
                 syncing.isVisible = false
-                snackbar.isVisible = !state.defaultSms || !state.smsPermission || !state.contactPermission
+                snackbar.isVisible = !state.defaultSms || !state.smsPermission || !state.contactPermission || !state.notificationPermission
             }
 
             is SyncRepository.SyncProgress.Running -> {
@@ -313,6 +313,12 @@ class MainActivity : QkThemedActivity(), MainView {
             !state.contactPermission -> {
                 snackbarTitle?.setText(R.string.main_permission_required)
                 snackbarMessage?.setText(R.string.main_permission_contacts)
+                snackbarButton?.setText(R.string.main_permission_allow)
+            }
+
+            !state.notificationPermission -> {
+                snackbarTitle?.setText(R.string.main_permission_required)
+                snackbarMessage?.setText(R.string.main_permission_notification)
                 snackbarButton?.setText(R.string.main_permission_allow)
             }
         }
@@ -350,7 +356,8 @@ class MainActivity : QkThemedActivity(), MainView {
             this, arrayOf(
                 Manifest.permission.READ_SMS,
                 Manifest.permission.SEND_SMS,
-                Manifest.permission.READ_CONTACTS
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.POST_NOTIFICATIONS,
             ), 0
         )
     }

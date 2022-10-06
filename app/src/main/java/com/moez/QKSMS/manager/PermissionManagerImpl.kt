@@ -65,8 +65,14 @@ class PermissionManagerImpl @Inject constructor(private val context: Context) : 
         return hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
+    override fun hasNotification(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return hasPermission(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        return true
+    }
+
     private fun hasPermission(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
     }
-
 }

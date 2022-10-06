@@ -377,7 +377,7 @@ class MessageRepositoryImpl @Inject constructor(
                     }
                     .toMutableMap()
 
-            val imageByteCount = imageBytesByAttachment.values.sumBy { byteArray -> byteArray.size }
+            val imageByteCount = imageBytesByAttachment.values.sumOf { byteArray -> byteArray.size }
             if (imageByteCount > remainingBytes) {
                 imageBytesByAttachment.forEach { (attachment, originalBytes) ->
                     val uri = attachment.getUri() ?: return@forEach
