@@ -185,7 +185,7 @@
             android:exported="false" />
         <receiver
             android:name=".receiver.MmsReceivedReceiver"
-            android:taskAffinity="com.klinker.android.messaging.MMS_RECEIVED"
+            android:taskAffinity="${applicationId}.MMS_RECEIVED"
             android:exported="false" />
         <receiver
             android:name=".receiver.MarkArchivedReceiver"

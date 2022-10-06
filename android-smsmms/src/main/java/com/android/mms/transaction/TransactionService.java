@@ -931,7 +931,7 @@ public class TransactionService extends Service implements Observer {
                         BroadcastUtils.sendExplicitBroadcast(
                                 TransactionService.this,
                                 new Intent(),
-                                com.klinker.android.send_message.Transaction.MMS_ERROR);
+                                com.klinker.android.send_message.Transaction.ACTION_MMS_ERROR);
                         mServiceHandler.markAllPendingTransactionsAsFailed();
                         endMmsConnectivity();
                         stopSelf();

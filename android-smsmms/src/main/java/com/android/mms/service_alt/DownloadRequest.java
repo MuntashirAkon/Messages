@@ -224,7 +224,7 @@ public class DownloadRequest extends MmsRequest {
     }
 
     private static void notifyOfDownload(Context context) {
-        BroadcastUtils.sendExplicitBroadcast(context, new Intent(), Transaction.NOTIFY_OF_MMS);
+        BroadcastUtils.sendExplicitBroadcast(context, new Intent(), Transaction.ACTION_NOTIFY_OF_MMS);
 
         // TODO, not sure what this is doing... sending a broadcast that
         // the download has finished from a specific user account I believe.

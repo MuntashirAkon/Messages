@@ -214,7 +214,7 @@ public class NotificationTransaction extends Transaction implements Runnable {
                     BroadcastUtils.sendExplicitBroadcast(
                             mContext,
                             new Intent(),
-                            com.klinker.android.send_message.Transaction.NOTIFY_OF_MMS);
+                            com.klinker.android.send_message.Transaction.ACTION_NOTIFY_OF_MMS);
                 }
             }
 

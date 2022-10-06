@@ -247,15 +247,15 @@ public class RetryScheduler implements Observer {
             context.getContentResolver().update(Mms.CONTENT_URI, values, where, null);
 
             BroadcastUtils.sendExplicitBroadcast(
-                    mContext, new Intent(), com.klinker.android.send_message.Transaction.REFRESH);
+                    mContext, new Intent(), com.klinker.android.send_message.Transaction.ACTION_REFRESH);
             BroadcastUtils.sendExplicitBroadcast(
                     mContext,
                     new Intent(),
-                    com.klinker.android.send_message.Transaction.NOTIFY_SMS_FAILURE);
+                    com.klinker.android.send_message.Transaction.ACTION_NOTIFY_SMS_FAILURE);
 
             // broadcast that mms has failed and you can notify user from there if you would like
             BroadcastUtils.sendExplicitBroadcast(
-                    mContext, new Intent(), com.klinker.android.send_message.Transaction.MMS_ERROR);
+                    mContext, new Intent(), com.klinker.android.send_message.Transaction.ACTION_MMS_ERROR);
         } catch (Exception e) {
         }
     }

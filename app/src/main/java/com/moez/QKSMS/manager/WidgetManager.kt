@@ -18,10 +18,12 @@
  */
 package com.moez.QKSMS.manager
 
+import com.moez.QKSMS.BuildConfig
+
 interface WidgetManager {
 
     companion object {
-        const val ACTION_NOTIFY_DATASET_CHANGED = "io.github.muntashirakon.messages.intent.action.ACTION_NOTIFY_DATASET_CHANGED"
+        const val ACTION_NOTIFY_DATASET_CHANGED = "${BuildConfig.APPLICATION_ID}.intent.action.ACTION_NOTIFY_DATASET_CHANGED"
     }
 
     fun updateUnreadCount()

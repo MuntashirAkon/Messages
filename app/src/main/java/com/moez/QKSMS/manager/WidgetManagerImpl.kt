@@ -23,6 +23,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import com.klinker.android.send_message.BroadcastUtils
+import com.moez.QKSMS.feature.widget.WidgetProvider
 import javax.inject.Inject
 
 class WidgetManagerImpl @Inject constructor(private val context: Context) : WidgetManager {
@@ -33,7 +34,7 @@ class WidgetManagerImpl @Inject constructor(private val context: Context) : Widg
 
     override fun updateTheme() {
         val ids = AppWidgetManager.getInstance(context)
-                .getAppWidgetIds(ComponentName("io.github.muntashirakon.messages", "com.moez.QKSMS.feature.widget.WidgetProvider"))
+                .getAppWidgetIds(ComponentName(context, WidgetProvider::class.java))
 
         val intent = Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
 

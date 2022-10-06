@@ -84,7 +84,7 @@ class MmsSentReceiver : BroadcastReceiver() {
         Timber.v(filePath)
         File(filePath).delete()
 
-        Uri.parse(intent.getStringExtra("content_uri"))?.let { uri ->
+        Uri.parse(intent.getStringExtra(Transaction.EXTRA_CONTENT_URI))?.let { uri ->
             val pendingResult = goAsync()
             syncMessage.execute(uri) { pendingResult.finish() }
         }

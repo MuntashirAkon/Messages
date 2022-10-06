@@ -56,17 +56,17 @@ class Transaction @JvmOverloads constructor(private val context: Context, settin
     companion object {
         var settings: Settings = Settings()
 
-        const val MMS_SENT = "com.moez.QKSMS.MMS_SENT"
+        const val ACTION_MMS_SENT = "com.klinker.android.send_message.MMS_SENT"
         const val EXTRA_CONTENT_URI = "content_uri"
         const val EXTRA_FILE_PATH = "file_path"
 
-        const val NOTIFY_SMS_FAILURE = "com.moez.QKSMS.NOTIFY_SMS_FAILURE"
-        const val MMS_UPDATED = "com.moez.QKSMS.MMS_UPDATED"
-        const val MMS_ERROR = "com.klinker.android.send_message.MMS_ERROR"
-        const val REFRESH = "com.klinker.android.send_message.REFRESH"
-        const val MMS_PROGRESS = "com.klinker.android.send_message.MMS_PROGRESS"
-        const val NOTIFY_OF_DELIVERY = "com.klinker.android.send_message.NOTIFY_DELIVERY"
-        const val NOTIFY_OF_MMS = "com.klinker.android.messaging.NEW_MMS_DOWNLOADED"
+        const val ACTION_NOTIFY_SMS_FAILURE = "com.klinker.android.send_message.NOTIFY_SMS_FAILURE"
+        const val ACTION_MMS_UPDATED = "com.klinker.android.send_message.MMS_UPDATED"
+        const val ACTION_MMS_ERROR = "com.klinker.android.send_message.MMS_ERROR"
+        const val ACTION_REFRESH = "com.klinker.android.send_message.REFRESH"
+        const val ACTION_MMS_PROGRESS = "com.klinker.android.send_message.MMS_PROGRESS"
+        const val ACTION_NOTIFY_OF_DELIVERY = "com.klinker.android.send_message.NOTIFY_DELIVERY"
+        const val ACTION_NOTIFY_OF_MMS = "com.klinker.android.messaging.NEW_MMS_DOWNLOADED"
 
 
         const val DEFAULT_EXPIRY_TIME = (7 * 24 * 60 * 60).toLong()
@@ -96,15 +96,15 @@ class Transaction @JvmOverloads constructor(private val context: Context, settin
             val persister = PduPersister.getPduPersister(context)
             val messageUri = existingUri ?: persister.persist(sendReq, Uri.parse("content://mms/outbox"), threadId, true, true, null)
 
-            val sentIntent = Intent(MMS_SENT)
-            BroadcastUtils.addClassName(context, sentIntent, MMS_SENT)
+            val sentIntent = Intent(ACTION_MMS_SENT)
+            BroadcastUtils.addClassName(context, sentIntent, ACTION_MMS_SENT)
 
             sentIntent.putExtra(EXTRA_CONTENT_URI, messageUri.toString())
             sentIntent.putExtra(EXTRA_FILE_PATH, sendFile.path)
             val sentPI = PendingIntent.getBroadcast(context, 0, sentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-            val updatedIntent = Intent(MMS_UPDATED).putExtra("uri", messageUri.toString())
-            BroadcastUtils.addClassName(context, updatedIntent, MMS_UPDATED)
+            val updatedIntent = Intent(ACTION_MMS_UPDATED).putExtra("uri", messageUri.toString())
+            BroadcastUtils.addClassName(context, updatedIntent, ACTION_MMS_UPDATED)
             context.sendBroadcast(updatedIntent)
 
             val contentUri: Uri? = try {

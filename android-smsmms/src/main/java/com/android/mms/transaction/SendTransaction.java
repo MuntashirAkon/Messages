@@ -169,10 +169,10 @@ public class SendTransaction extends Transaction implements Runnable {
                 Timber.e("Delivery failed.");
                 builder.append("Delivery failed\n");
 
-                Intent intent = new Intent(com.klinker.android.send_message.Transaction.MMS_ERROR);
+                Intent intent = new Intent(com.klinker.android.send_message.Transaction.ACTION_MMS_ERROR);
                 intent.putExtra("stack", builder.toString());
                 BroadcastUtils.sendExplicitBroadcast(
-                        mContext, intent, com.klinker.android.send_message.Transaction.MMS_ERROR);
+                        mContext, intent, com.klinker.android.send_message.Transaction.ACTION_MMS_ERROR);
             }
             notifyObservers();
         }
