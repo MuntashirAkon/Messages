@@ -30,8 +30,8 @@ android {
         applicationId "io.github.muntashirakon.messages"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1
-        versionName "0.9.0"
+        versionCode 2
+        versionName "0.9.1"
         setProperty("archivesBaseName", "Messages_v${versionName}")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -162,7 +162,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$coroutines_version"
 
     implementation "com.github.chrisbanes:PhotoView:2.0.0"
-    implementation 'com.callcontrol:datashare:1.2.0'
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
     implementation "com.google.android:flexbox:0.3.1"
     implementation "com.jakewharton.timber:timber:$timber_version"

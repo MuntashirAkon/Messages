@@ -13,7 +13,6 @@ import javax.inject.Singleton
 class BlockingManager @Inject constructor(
     private val prefs: Preferences,
     private val callBlockerBlockingClient: CallBlockerBlockingClient,
-    private val callControlBlockingClient: CallControlBlockingClient,
     private val qksmsBlockingClient: QksmsBlockingClient,
     private val shouldIAnswerBlockingClient: ShouldIAnswerBlockingClient
 ) : BlockingClient {
@@ -22,7 +21,6 @@ class BlockingManager @Inject constructor(
         get() = when (prefs.blockingManager.get()) {
             Preferences.BLOCKING_MANAGER_CB -> callBlockerBlockingClient
             Preferences.BLOCKING_MANAGER_SIA -> shouldIAnswerBlockingClient
-            Preferences.BLOCKING_MANAGER_CC -> callControlBlockingClient
             else -> qksmsBlockingClient
         }
 

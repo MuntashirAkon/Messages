@@ -79,7 +79,6 @@ class BlockedMessagesAdapter @Inject constructor(
         holder.date.text = dateFormatter.getConversationTimestamp(conversation.date)
 
         holder.blocker.text = when (conversation.blockingClient) {
-            Preferences.BLOCKING_MANAGER_CC -> context.getString(R.string.blocking_manager_call_control_title)
             Preferences.BLOCKING_MANAGER_SIA -> context.getString(R.string.blocking_manager_sia_title)
             else -> null
         }

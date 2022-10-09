@@ -17,8 +17,6 @@ import javax.inject.Inject
 
 class BlockingManagerPresenter @Inject constructor(
     private val callBlocker: CallBlockerBlockingClient,
-    private val callControl: CallControlBlockingClient,
-    private val context: Context,
     private val conversationRepo: ConversationRepository,
     private val navigator: Navigator,
     private val prefs: Preferences,
@@ -27,7 +25,6 @@ class BlockingManagerPresenter @Inject constructor(
 ) : QkPresenter<BlockingManagerView, BlockingManagerState>(BlockingManagerState(
         blockingManager = prefs.blockingManager.get(),
         callBlockerInstalled = callBlocker.isAvailable(),
-        callControlInstalled = callControl.isAvailable(),
         siaInstalled = shouldIAnswer.isAvailable()
 )) {
 
@@ -44,12 +41,6 @@ class BlockingManagerPresenter @Inject constructor(
             .distinctUntilChanged()
             .autoDispose(view.scope())
                 .subscribe { available -> newState { copy(callBlockerInstalled = available) } }
-
-        view.activityResumed()
-                .map { callControl.isAvailable() }
-                .distinctUntilChanged()
-                .autoDispose(view.scope())
-                .subscribe { available -> newState { copy(callControlInstalled = available) } }
 
         view.activityResumed()
                 .map { shouldIAnswer.isAvailable() }
@@ -79,37 +70,6 @@ class BlockingManagerPresenter @Inject constructor(
                 .autoDispose(view.scope())
                 .subscribe {
                     prefs.blockingManager.set(Preferences.BLOCKING_MANAGER_CB)
-                }
-
-        view.callControlClicked()
-                .filter {
-                    val installed = callControl.isAvailable()
-                    if (!installed) {
-                        navigator.installCallControl()
-                    }
-
-                    val enabled = prefs.blockingManager.get() == Preferences.BLOCKING_MANAGER_CC
-                    installed && !enabled
-                }
-                .observeOn(Schedulers.io())
-                .map { getAddressesToBlock(callControl) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .switchMap { numbers ->
-                    when (numbers.size) {
-                        0 -> Observable.just(true)
-                        else -> view.showCopyDialog(context.getString(R.string.blocking_manager_call_control_title))
-                                .toObservable()
-                    }
-                }
-                .doOnNext { newState { copy() } } // Radio button may have been selected when it shouldn't, fix it
-                .filter { it }
-                .observeOn(Schedulers.io())
-                .map { getAddressesToBlock(callControl) } // This sucks. Can't wait to use coroutines
-                .switchMap { numbers -> callControl.block(numbers).andThen(Observable.just(Unit)) } // Hack
-                .autoDispose(view.scope())
-                .subscribe {
-                    callControl.shouldBlock("callcontrol").blockingGet()
-                    prefs.blockingManager.set(Preferences.BLOCKING_MANAGER_CC)
                 }
 
         view.siaClicked()

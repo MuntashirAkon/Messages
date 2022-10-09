@@ -21,7 +21,7 @@ buildscript {
     ext.lifecycle_version = '2.2.0'
     ext.material_version = '1.6.1'
     ext.mockito_version = '2.18.3'
-    ext.moshi_version = '1.13.0'
+    ext.moshi_version = '1.14.0'
     ext.okhttp3_version = '4.10.0'
     ext.realm_version = '10.12.0'
     ext.realm_adapters_version = '3.1.0'
@@ -31,7 +31,7 @@ buildscript {
     ext.rxjava_version = '2.2.21'
     ext.rxkotlin_version = '2.4.0'
     ext.rx_preferences_version = '2.0.1'
-    ext.timber_version = '4.5.1'
+    ext.timber_version = '5.0.1'
 
     ext.abiCodes = ['armeabi-v7a': 1, 'arm64-v8a': 2]
 
