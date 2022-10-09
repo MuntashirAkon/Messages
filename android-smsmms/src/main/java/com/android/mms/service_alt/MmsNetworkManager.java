@@ -25,17 +25,21 @@ import android.net.NetworkRequest;
 import android.net.SSLCertificateSocketFactory;
 import android.os.Build;
 import android.os.SystemClock;
-import com.android.mms.service_alt.exception.MmsNetworkException;
-import com.squareup.okhttp.ConnectionPool;
-import com.squareup.okhttp.Dns;
 
-import timber.log.Timber;
+import com.android.mms.service_alt.exception.MmsNetworkException;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.ConnectionPool;
+import okhttp3.Dns;
+import timber.log.Timber;
 
 public class MmsNetworkManager implements Dns {
 
@@ -246,9 +250,10 @@ public class MmsNetworkManager implements Dns {
         mMmsHttpClient = null;
     }
 
+    @NotNull
     @Override
-    public List<InetAddress> lookup(String hostname) throws UnknownHostException {
-        Network network = null;
+    public List<InetAddress> lookup(@NotNull String hostname) throws UnknownHostException {
+        Network network;
         synchronized (this) {
             if (mNetwork == null) {
                 return Collections.emptyList();
@@ -268,7 +273,7 @@ public class MmsNetworkManager implements Dns {
 
     private ConnectionPool getOrCreateConnectionPoolLocked() {
         if (mConnectionPool == null) {
-            mConnectionPool = new ConnectionPool(httpMaxConnections, httpKeepAliveDurationMs);
+            mConnectionPool = new ConnectionPool(httpMaxConnections, httpKeepAliveDurationMs, TimeUnit.MILLISECONDS);
         }
         return mConnectionPool;
     }
@@ -306,7 +311,7 @@ public class MmsNetworkManager implements Dns {
      * @return The APN name if available, otherwise null
      */
     public String getApnName() {
-        Network network = null;
+        Network network;
         synchronized (this) {
             if (mNetwork == null) {
                 Timber.d("MmsNetworkManager: getApnName: network not available");

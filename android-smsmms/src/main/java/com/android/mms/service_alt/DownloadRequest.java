@@ -28,6 +28,8 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import com.android.mms.service_alt.exception.MmsHttpException;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.GenericPdu;
@@ -75,6 +77,7 @@ public class DownloadRequest extends MmsRequest {
         mContentUri = contentUri;
     }
 
+    @Nullable
     @Override
     protected byte[] doHttp(Context context, MmsNetworkManager netMgr, ApnSettings apn)
             throws MmsHttpException {

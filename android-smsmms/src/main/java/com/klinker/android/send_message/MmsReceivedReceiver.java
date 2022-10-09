@@ -164,7 +164,7 @@ public class MmsReceivedReceiver extends BroadcastReceiver {
     }
 
     private static NotificationInd getNotificationInd(Context context, Intent intent) throws MmsException {
-        return (NotificationInd) PduPersister.getPduPersister(context).load((Uri) intent.getParcelableExtra(EXTRA_URI));
+        return (NotificationInd) PduPersister.getPduPersister(context).load(intent.getParcelableExtra(EXTRA_URI));
     }
 
     private static abstract class CommonAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -334,7 +334,7 @@ public class MmsReceivedReceiver extends BroadcastReceiver {
         final GenericPdu pdu =
                 (new PduParser(response, new MmsConfig.Overridden(new MmsConfig(context), null).
                         getSupportMmsContentDisposition())).parse();
-        if (pdu == null || !(pdu instanceof RetrieveConf)) {
+        if (!(pdu instanceof RetrieveConf)) {
             Timber.e("MmsReceivedReceiver.sendNotification failed to parse pdu");
             return null;
         }

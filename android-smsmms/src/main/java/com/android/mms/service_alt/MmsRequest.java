@@ -30,6 +30,9 @@ import android.provider.Settings;
 import android.service.carrier.CarrierMessagingService;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+
+import androidx.annotation.Nullable;
+
 import com.android.mms.service_alt.exception.ApnException;
 import com.android.mms.service_alt.exception.MmsHttpException;
 import com.klinker.android.send_message.Utils;
@@ -151,7 +154,7 @@ public abstract class MmsRequest {
             wifi.setWifiEnabled(false);
         }
 
-        mobileDataEnabled = Utils.isMobileDataEnabled(context);
+        mobileDataEnabled = Boolean.TRUE.equals(Utils.isMobileDataEnabled(context));
         Timber.v("mobile data enabled: " + mobileDataEnabled);
 
         if (!mobileDataEnabled && !useWifi(context)) {
@@ -226,7 +229,7 @@ public abstract class MmsRequest {
                 }
                 try {
                     Thread.sleep(retryDelaySecs * 1000, 0/*nano*/);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
                 retryDelaySecs <<= 1;
             }
@@ -252,7 +255,7 @@ public abstract class MmsRequest {
      * @param response The response body
      * @param httpStatusCode The optional http status code in case of http failure
      */
-    public void processResult(Context context, int result, byte[] response, int httpStatusCode) {
+    public void processResult(Context context, int result, @Nullable byte[] response, int httpStatusCode) {
         final Uri messageUri = persistIfRequired(context, result, response);
 
         // Return MMS HTTP request result via PendingIntent
@@ -343,6 +346,7 @@ public abstract class MmsRequest {
      * @return The HTTP response data
      * @throws MmsHttpException If any network error happens
      */
+    @Nullable
     protected abstract byte[] doHttp(Context context, MmsNetworkManager netMgr, ApnSettings apn)
             throws MmsHttpException;
 
